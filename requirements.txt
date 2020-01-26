@@ -2,3 +2,5 @@ Flask
 Flask-Session
 requests
 redis
+twint
+asyncio

@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>{{ title }}</h1>
+  <form class="authorize-form" action="/search" method="POST">
+    Text <input type="text" name="text" value="{{ text }}">
+    <input type="submit" value="Search">
+  </form>
+  <script>
+    const tweets = JSON.parse('{{ tweets|safe }}');
+    console.log('tweets', tweets);
+  </script>
+{% endblock %}

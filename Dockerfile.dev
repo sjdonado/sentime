@@ -10,10 +10,9 @@ WORKDIR /usr/src
 EXPOSE 5000
 
 COPY ./requirements.txt .
+
 RUN pip3 install -r requirements.txt
 
-ENV FLASK_APP=wsgi.py
-ENV APP_CONFIG_FILE=config.py
-ENV FLASK_DEBUG=1
+COPY . .
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python3", "wsgi.py"]

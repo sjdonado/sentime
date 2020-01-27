@@ -2,12 +2,22 @@
 
 {% block content %}
   <h1>{{ title }}</h1>
-  <form class="authorize-form" action="/search" method="POST">
-    Text <input type="text" name="text" value="{{ text }}">
-    <input type="submit" value="Search">
-  </form>
-  <script>
+  Text <input id="text" type="text" value="{{ text }}">
+  <!-- <input type="submit" value="Search"> -->
+  <button onclick="search()">Search</button>
+  <script type="text/javascript" charset="utf-8">
+    const socket = io();
+
+    function search() {
+      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value }));
+    }
+
+    socket.on('tweets', function(data){
+      console.log(data);
+    });
+  </script>
+  <!-- <script>
     const tweets = JSON.parse('{{ tweets|safe }}');
     console.log('tweets', tweets);
-  </script>
+  </script> -->
 {% endblock %}

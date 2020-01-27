@@ -1,10 +1,12 @@
 import twint
 import asyncio
 import threading
+import json
 
 from flask import redirect, request, session, Blueprint, copy_current_request_context
+from flask_socketio import send, emit
 
-from .. import app
+from .. import socketio
 
 # Blueprint Configuration
 search_bp = Blueprint('search_bp', __name__,
@@ -12,23 +14,25 @@ search_bp = Blueprint('search_bp', __name__,
                       static_folder='static')
 
 def launch_query(c):
-  with app.test_request_context():
-    from flask import session
+  asyncio.set_event_loop(asyncio.new_event_loop())
+  twint.run.Search(c)
 
-    asyncio.set_event_loop(asyncio.new_event_loop())
-    twint.run.Search(c)
+  tweets = [t.__dict__ for t in twint.output.tweets_list]
+  # print("launch query => {}".format(tweets), flush=True)
 
-    tweets = twint.output.tweets_list
-    session['tweets'] = tweets
-    print("launch query => {}".format(session.get('tweets')), flush=True)
+  socketio.emit('tweets', { 'data': tweets })
 
-@search_bp.route('/search', methods=['POST'])
-def search():
-  session['text'] = request.values.get('text')
+@socketio.on('search')
+def search(message):
+  data = json.loads(message)
+  # print(json.loads(message), flush=True)
+  session['text'] = data['text']
   c = twint.Config()
-  c.Search = session.get('text')
+  c.Search = data['text']
   c.Store_object = True
+  c.Limit = 100
 
+  # print('thread start...', flush=True)
   threading.Thread(target=launch_query, args=(c,)).start()
-  print('thread start...', flush=True)
+
   return redirect('/')

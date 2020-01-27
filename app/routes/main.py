@@ -10,6 +10,6 @@ def index():
   return render_template(
     'index.html',
     title = "Citizens sentiment analysis through their tweets",
-    text = session.get('text'),
+    text = session.get('text') if session.get('text') else '',
   )
 

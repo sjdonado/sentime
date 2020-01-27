@@ -4,7 +4,6 @@ import threading
 import json
 
 from flask import redirect, request, session, Blueprint, copy_current_request_context
-from flask_socketio import send, emit
 
 from .. import socketio
 
@@ -18,21 +17,18 @@ def launch_query(c):
   twint.run.Search(c)
 
   tweets = [t.__dict__ for t in twint.output.tweets_list]
-  # print("launch query => {}".format(tweets), flush=True)
-
+  print("DATA => {}".format(tweets), flush=True)
   socketio.emit('tweets', { 'data': tweets })
 
 @socketio.on('search')
 def search(message):
   data = json.loads(message)
-  # print(json.loads(message), flush=True)
+
   session['text'] = data['text']
   c = twint.Config()
   c.Search = data['text']
   c.Store_object = True
   c.Limit = 100
 
-  # print('thread start...', flush=True)
-  threading.Thread(target=launch_query, args=(c,)).start()
-
-  return redirect('/')
+  socketio.emit('tweets', { 'data': 'processing...' })
+  threading.Thread(target=launch_query, args=(c,), daemon=True).start()

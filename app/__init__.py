@@ -2,8 +2,11 @@ import logging
 from flask import Flask
 from flask_session import Session
 from flask_socketio import SocketIO, emit
+import eventlet
 
 from config import Config
+
+eventlet.monkey_patch()
 
 sess = Session()
 logger = logging.getLogger(__name__)
@@ -12,7 +15,7 @@ if Config.FLASK_ENV == 'production':
   logging.basicConfig(filename='info.log',level=logging.INFO)
 
 app = Flask(__name__, instance_relative_config=False)
-socketio = SocketIO(app)
+socketio = SocketIO(app, async_mode='eventlet')
 
 def create_app():
   app.config.from_object(Config)

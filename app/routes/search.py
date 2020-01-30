@@ -28,6 +28,7 @@ def search(message):
   c = twint.Config()
   c.Search = data['text']
   c.Store_object = True
+  c.Near = data['city']
   c.Limit = 100
 
   socketio.emit('tweets', { 'data': 'processing...' })

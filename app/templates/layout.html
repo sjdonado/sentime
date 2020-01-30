@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +8,24 @@
   <title>{{ title }}</title>
   <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
   <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" type="text/css">
+  <link
+    rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="anonymous"/>
+  <script
+    src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='js/webgl-heatmap.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/leaflet-webgl-heatmap.js') }}"></script>
 </head>
 <body>
   <div class="container">
     {% block content %}{% endblock %}
+  </div>
+  <br>
+  <div id="mapid">
+    {% block map %}{% endblock %}
   </div>
 </body>
 </html>

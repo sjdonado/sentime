@@ -1,39 +1,59 @@
 {% extends "layout.html" %}
 
-<!-- Block containing the user input-->
 {% block content %}
   <h1>{{ title }}</h1>
-  City <input id="city" type="text" value="{{ city }}"> 
-  Text <input id="text" type="text" value="{{ text }}">
+  Text <input id="0,0" type="text" value="{{ text }}">
+  <select id="city">
+    <option value="">Seleccionar una opción</option>
+    {% for c in cities %}
+      <option value='{{ "{},{}".format(c.lat, c.lng) }}'>{{ c.city }}</option>
+    {% endfor %}
+  </select>
   <button onclick="search()">Search</button>
   <script type="text/javascript" charset="utf-8">
     const socket = io();
 
     function search() {
-      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value , city: document.getElementById('city').value}));
+      const [lat, lng] = document.getElementById('city').value.split(',')
+      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value , city: { lat, lng } }));
     }
 
-    socket.on('tweets', function (data) {
+    socket.on('tweets', function ({ message, data }) {
+      console.log(message);
       console.log(data);
+      if (data.length) {
+        const dataPoints = data.map(({ geo }) => {
+          const [lat, lng] = geo.split(',');
+          return [Number(lat), Number(lng), 1];
+        });
+
+        console.log('dataPoints', dataPoints);
+  
+        heatmap.setData( dataPoints );
+        mymap.addLayer(heatmap);
+      }
     });
   </script>
 {% endblock %}
 
-<!-- Block containing the drawing of the map and the heatmap-->
 {% block map %}
 <script>
-  var mymap = L.map('mapid').setView([11.0041, -74.8057], 12); //Pointing to Barranquilla by default
+  var mymap = L.map('mapid');
+
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  maxZoom: 18,
-  id: 'mapbox/streets-v11',
-  accessToken: 'pk.eyJ1IjoicGFzdG9yaXpvaiIsImEiOiJjazV6cDh2YnAwMjBhM2ptbWhveXpuOGw5In0.97o-ntf0qtgJoOmg9l3ESA'
-}).addTo(mymap);
-  var heatmap = L.webGLHeatmap({size: 1000}); 
-  //Test data points (Halifax, CA)
-  //var dataPoints = [[44.6674, -63.5703, 37], [44.6826, -63.7552, 34], [44.6325, -63.5852, 41], [44.6467, -63.4696, 67], [44.6804, -63.487, 64], [44.6622, -63.5364, 40], [44.603, - 63.743, 52]];
-  heatmap.setData( dataPoints );
-  mymap.addLayer(heatmap);
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    accessToken: 'pk.eyJ1IjoicGFzdG9yaXpvaiIsImEiOiJjazV6cDh2YnAwMjBhM2ptbWhveXpuOGw5In0.97o-ntf0qtgJoOmg9l3ESA'
+  }).addTo(mymap);
+
+  var heatmap = L.webGLHeatmap({ size: 1000 }); 
+
+  document.getElementById('city').addEventListener('change', (event) => {
+    console.log(event, document.getElementById('city').value)
+    const [lat, lng] = document.getElementById('city').value.split(',')
+    mymap.setView([lat, lng], 12.5);
+  });
 </script>
 
 {% endblock %}

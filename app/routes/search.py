@@ -3,7 +3,7 @@ import asyncio
 import threading
 import json
 
-from flask import redirect, request, session, Blueprint, copy_current_request_context
+from flask import session, Blueprint
 
 from .. import socketio
 
@@ -17,8 +17,8 @@ def launch_query(c):
   twint.run.Search(c)
 
   tweets = [t.__dict__ for t in twint.output.tweets_list]
-  print("DATA => {}".format(tweets), flush=True)
-  socketio.emit('tweets', { 'data': tweets })
+  # print("DATA => {}".format(tweets), flush=True)
+  socketio.emit('tweets', { 'message': 'Finished', 'data': tweets })
 
 @socketio.on('search')
 def search(message):
@@ -28,8 +28,9 @@ def search(message):
   c = twint.Config()
   c.Search = data['text']
   c.Store_object = True
-  c.Near = data['city']
-  c.Limit = 100
+  c.Location = True
+  c.Geo = "{},{},5km".format(data['city']['lat'], data['city']['lng'])
+  c.Limit = 10
 
-  socketio.emit('tweets', { 'data': 'processing...' })
+  socketio.emit('tweets', { 'message': 'Processing...', 'data': [] })
   threading.Thread(target=launch_query, args=(c,), daemon=True).start()

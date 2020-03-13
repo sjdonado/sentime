@@ -1,5 +1,4 @@
 import os
-import csv
 import json
 
 import twint
@@ -10,11 +9,10 @@ from flask import session, Blueprint
 
 from .. import socketio, app
 
-cities_path =  os.path.join(app.static_folder, 'data', 'Departamentos_y_municipios_de_Colombia.csv')
-cities = []
+cities_path = os.path.join(app.static_folder, 'data', 'colombia_departments_capitals_locations.json')
 
-for row in csv.DictReader(cities_path):
-  cities.append(json.dumps(row))
+with open(cities_path) as f:
+  cities = json.load(f)
 
 # Blueprint Configuration
 search_bp = Blueprint('search_bp', __name__,
@@ -31,19 +29,20 @@ def launch_query(c):
 
 @socketio.on('search')
 def search(message):
+  print(message)
   data = json.loads(message)
-
-  # TODO:
-  # Connect to geocode to get the coordinates for a city
-  # Get tweets by cities
-
   session['text'] = data['text']
   c = twint.Config()
   c.Search = data['text']
   c.Store_object = True
   c.Location = True
-  c.Geo = "{},{},5km".format(data['city']['lat'], data['city']['lng'])
-  c.Time = 10
+  c.Limit = 100
 
+  # TODO: Add each city thread to a Queue
+
+  c.Geo = "{},{},5km".format(cities[0]['geometry']['location']['lat'], cities[0]['geometry']['location']['lng'])
+
+  # for city in cities:
+  #   c.Geo = "{},{},5km".format(city['geometry']['location']['lat'], city['geometry']['location']['lng'])
   socketio.emit('tweets', { 'message': 'Processing...', 'data': [] })
   threading.Thread(target=launch_query, args=(c,), daemon=True).start()

@@ -8,4 +8,9 @@ h1 {
 
 #mapid { 
   height: 500px;
+  max-width: 500px;
+}
+
+#progress-table {
+  margin-bottom: 12px;
 }

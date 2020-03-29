@@ -24,8 +24,21 @@
     {% block content %}{% endblock %}
   </div>
   <br>
-  <div id="mapid">
-    {% block map %}{% endblock %}
+  <div>
+    <div>
+      <span id="progress"></span>
+      <table id="progress-table" border="1">
+        <tr>
+          <th>City</th>
+          <th>Results</th>
+        </tr>
+        <tr>
+        </tr>
+      </table>
+    </div>
+    <div id="mapid">
+      {% block map %}{% endblock %}
+    </div>
   </div>
 </body>
 </html>

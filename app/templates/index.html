@@ -8,24 +8,28 @@
     const socket = io();
 
     function search() {
-      // const [lat, lng] = document.getElementById('city').value.split(',')
       socket.emit('search', JSON.stringify({ text: document.getElementById('text').value }));
     }
 
-    socket.on('tweets', function ({ message, data }) {
-      console.log(message);
-      console.log(data);
-      // if (data.length) {
-      //   const dataPoints = data.map(({ geo }) => {
-      //     const [lat, lng] = geo.split(',');
-      //     return [Number(lat), Number(lng), 1];
-      //   });
-
-      //   console.log('dataPoints', dataPoints);
+    socket.on('tweets', function ({ status, progress, data }) {
+      console.log('status => ', status, 'progress => ', progress, 'data => ', data);
+      if (status === 'processing') {
+        console.log('tweets =>', data.tweets)
+        document.getElementById('progress').innerText = `Completado: ${progress * 100}%`;
+        const table = document.getElementById('progress-table');
+        const row = table.insertRow(table.rows.length - 1);
+        const cityCell = row.insertCell(0);
+        const resultsCell = row.insertCell(1);
+        cityCell.innerHTML = data.city.formatted_address;
+        resultsCell.innerHTML = data.results;
+      }
+      if (status === 'finished') {
+        const dataPoints = data.map(({ city }) => [Number(city.geometry.location.lat), Number(city.geometry.location.lng), 1]);
+        console.log('dataPoints', dataPoints);
   
-      //   heatmap.setData( dataPoints );
-      //   mymap.addLayer(heatmap);
-      // }
+        heatmap.setData( dataPoints );
+        mymap.addLayer(heatmap);
+      }
     });
   </script>
 {% endblock %}

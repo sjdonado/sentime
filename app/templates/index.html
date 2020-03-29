@@ -8,46 +8,65 @@
     const socket = io();
 
     function search() {
+      const table = document.getElementById('progress-table');
+      document.getElementById('progress').innerText = 'Progress: 0%'
+      while (table.rows.length > 1) {
+        table.deleteRow(table.rows.length - 1);
+      }
       socket.emit('search', JSON.stringify({ text: document.getElementById('text').value }));
     }
+
+    let resultsCounter = 0;
+    let tweets_acum = 0;
+    let heatmapData = [];
 
     socket.on('tweets', function ({ status, data }) {
       console.log('status => ', status, 'data => ', data);
       if (status === 'processing') {
-        console.log('tweets =>', data.tweets)
-        // document.getElementById('progress').innerText = `Completado: ${progress * 100}%`;
+        const { city, tweets } = data;
+
+        resultsCounter += 1;
+        tweets_acum += tweets.length;
+        document.getElementById('progress').innerText = `Progress: ${(resultsCounter / 32) * 100}%`;
+
         const table = document.getElementById('progress-table');
-        const row = table.insertRow(table.rows.length - 1);
+        const row = table.insertRow(table.rows.length);
         const cityCell = row.insertCell(0);
         const resultsCell = row.insertCell(1);
-        cityCell.innerHTML = data.city.formatted_address;
-        resultsCell.innerHTML = data.tweets.length;
+        const acumCell = row.insertCell(2);
+        cityCell.innerHTML = city.formatted_address;
+        resultsCell.innerHTML = tweets.length;
+        acumCell.innerHTML = tweets_acum;
+
+        console.log('tweets =>', tweets);
+
+        heatmapData.push({
+          location: new google.maps.LatLng(Number(city.geometry.location.lat), Number(city.geometry.location.lng)),
+          weight: tweets.length
+        });
       }
       if (status === 'finished') {
-        // const dataPoints = data.map(({ city }) => [Number(city.geometry.location.lat), Number(city.geometry.location.lng), 1]);
-        // console.log('dataPoints', dataPoints);
-  
-        // heatmap.setData( dataPoints );
-        // mymap.addLayer(heatmap);
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData,
+          radius: 20,
+        });
+        heatmap.setMap(map);
+        
+        resultsCounter = 0;
+        tweets_acum = 0;
+        heatmapData = [];
       }
     });
   </script>
 {% endblock %}
 
 {% block map %}
+<div id="map"></div>
 <script>
-  var mymap = L.map('mapid');
-
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    accessToken: '{{ access_token }}',
-  }).addTo(mymap);
-
-  var heatmap = L.webGLHeatmap({ size: 1000 }); 
-
-  mymap.setView([4.5709, 4.5709], 12.5);
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 4.1156735, lng: -72.9301367},
+    zoom: 5,
+  });
 </script>
 
 {% endblock %}

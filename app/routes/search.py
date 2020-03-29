@@ -34,27 +34,35 @@ def launch_query(q, text):
     c = twint.Config()
     c.Search = text
     c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d')
+    c.Limit = 1
+    c.Filter_retweets = True
     c.Store_object = True
     c.Location = True
     c.Hide_output = True
     c.Show_hashtags = False
+    c.Lang = 'es'
     # TODO: Fit radio based on city boundaries
-    c.Geo = "{},{},5km".format(
+    geo = "{},{},8km".format(
       city['geometry']['location']['lat'],
       city['geometry']['location']['lng']
     )
-    print('event loop => ', asyncio.get_event_loop(), flush=True)
-    twint.run.Search(c)
-    tweets = [t.__dict__ for t in twint.output.tweets_list]
-    socketio.emit('tweets', {
-      'status': 'processing',
-      'data': {
-        'city': city,
-        'tweets': tweets
-      }
-    })
+    c.Geo = geo
 
-    q.task_done()
+    def callback(args):
+      total_tweets = [t.__dict__ for t in twint.output.tweets_list]
+      tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
+      tweets = list(map(lambda t: t['tweet'], tweets))
+      socketio.emit('tweets', {
+        'status': 'processing',
+        'data': {
+          'city': city,
+          'tweets': tweets
+        }
+      })
+
+      q.task_done()
+
+    twint.run.Search(c, callback=callback)
 
 @socketio.on('search')
 def search(message):
@@ -62,18 +70,25 @@ def search(message):
   text = data['text']
   session['text'] = text
 
-  q = Queue(maxsize=0)
-  asyncio.set_event_loop(asyncio.new_event_loop())
+  if 'task_in_process' not in session:
+    session['task_in_process'] = False
 
-  socketio.emit('tweets', { 'status': 'started' })
+  if session['task_in_process'] == False:
+    session['task_in_process'] = True
+    q = Queue(maxsize=0)
 
-  for _ in range(num_threads):
-    Thread(target=launch_query, args=(q, text), daemon=True).start()
+    socketio.emit('tweets', { 'status': 'started' })
 
-  for city in cities:
-    q.put(city)
+    for _ in range(num_threads):
+      Thread(target=launch_query, args=(q, text), daemon=True).start()
 
-  q.join()
+    for city in cities:
+      q.put(city)
 
-  socketio.emit('tweets', { 'status': 'finished' })
+    q.join()
+
+    session['task_in_process'] = False
+    socketio.emit('tweets', { 'status': 'finished' })
+  else:
+    socketio.emit('tweets', { 'status': 'Wait for task in process' })
 

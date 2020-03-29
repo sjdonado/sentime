@@ -6,6 +6,22 @@ h1 {
   margin-bottom: 24px;
 }
 
-#mapid { 
+#map {
+  flex: 7;
   height: 500px;
+}
+
+#progress-table {
+  margin-bottom: 12px;
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.statistics {
+  flex: 3;
+  margin-left: 4px;
+  min-width: 300px;
 }

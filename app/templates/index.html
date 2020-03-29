@@ -1,39 +1,72 @@
 {% extends "layout.html" %}
 
-<!-- Block containing the user input-->
 {% block content %}
   <h1>{{ title }}</h1>
-  City <input id="city" type="text" value="{{ city }}"> 
   Text <input id="text" type="text" value="{{ text }}">
   <button onclick="search()">Search</button>
   <script type="text/javascript" charset="utf-8">
     const socket = io();
 
     function search() {
-      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value , city: document.getElementById('city').value}));
+      const table = document.getElementById('progress-table');
+      document.getElementById('progress').innerText = 'Progress: 0%'
+      while (table.rows.length > 1) {
+        table.deleteRow(table.rows.length - 1);
+      }
+      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value }));
     }
 
-    socket.on('tweets', function (data) {
-      console.log(data);
+    let resultsCounter = 0;
+    let tweets_acum = 0;
+    let heatmapData = [];
+
+    socket.on('tweets', function ({ status, data }) {
+      console.log('status => ', status, 'data => ', data);
+      if (status === 'processing') {
+        const { city, tweets } = data;
+
+        resultsCounter += 1;
+        tweets_acum += tweets.length;
+        document.getElementById('progress').innerText = `Progress: ${(resultsCounter / 32) * 100}%`;
+
+        const table = document.getElementById('progress-table');
+        const row = table.insertRow(table.rows.length);
+        const cityCell = row.insertCell(0);
+        const resultsCell = row.insertCell(1);
+        const acumCell = row.insertCell(2);
+        cityCell.innerHTML = city.formatted_address;
+        resultsCell.innerHTML = tweets.length;
+        acumCell.innerHTML = tweets_acum;
+
+        console.log('tweets =>', tweets);
+
+        heatmapData.push({
+          location: new google.maps.LatLng(Number(city.geometry.location.lat), Number(city.geometry.location.lng)),
+          weight: tweets.length
+        });
+      }
+      if (status === 'finished') {
+        var heatmap = new google.maps.visualization.HeatmapLayer({
+          data: heatmapData,
+          radius: 20,
+        });
+        heatmap.setMap(map);
+        
+        resultsCounter = 0;
+        tweets_acum = 0;
+        heatmapData = [];
+      }
     });
   </script>
 {% endblock %}
 
-<!-- Block containing the drawing of the map and the heatmap-->
 {% block map %}
+<div id="map"></div>
 <script>
-  var mymap = L.map('mapid').setView([11.0041, -74.8057], 12); //Pointing to Barranquilla by default
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  maxZoom: 18,
-  id: 'mapbox/streets-v11',
-  accessToken: 'pk.eyJ1IjoicGFzdG9yaXpvaiIsImEiOiJjazV6cDh2YnAwMjBhM2ptbWhveXpuOGw5In0.97o-ntf0qtgJoOmg9l3ESA'
-}).addTo(mymap);
-  var heatmap = L.webGLHeatmap({size: 1000}); 
-  //Test data points (Halifax, CA)
-  //var dataPoints = [[44.6674, -63.5703, 37], [44.6826, -63.7552, 34], [44.6325, -63.5852, 41], [44.6467, -63.4696, 67], [44.6804, -63.487, 64], [44.6622, -63.5364, 40], [44.603, - 63.743, 52]];
-  heatmap.setData( dataPoints );
-  mymap.addLayer(heatmap);
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 4.1156735, lng: -72.9301367},
+    zoom: 5,
+  });
 </script>
 
 {% endblock %}

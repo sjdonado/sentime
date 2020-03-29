@@ -1,0 +1,2199 @@
+[
+   {
+     "address_components": [
+       {
+         "long_name": "Leticia",
+         "short_name": "Leticia",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Leticia",
+         "short_name": "Leticia",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Amazonas Department",
+         "short_name": "Amazonas Department",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Leticia, Amazonas Department, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": -4.1786939,
+           "lng": -69.93143300000001
+         },
+         "southwest": {
+           "lat": -4.227636,
+           "lng": -69.9534791
+         }
+       },
+       "location": {
+         "lat": -4.203164999999999,
+         "lng": -69.935907
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": -4.1786939,
+           "lng": -69.93143300000001
+         },
+         "southwest": {
+           "lat": -4.227636,
+           "lng": -69.9534791
+         }
+       }
+     },
+     "place_id": "ChIJv49INkzx8pERwDbGp5dFsdk",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Medellin",
+         "short_name": "Medellin",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Antioquia",
+         "short_name": "Antioquia",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Medellin, Antioquia, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 6.373637,
+           "lng": -75.4734099
+         },
+         "southwest": {
+           "lat": 6.163719,
+           "lng": -75.7193741
+         }
+       },
+       "location": {
+         "lat": 6.2486069,
+         "lng": -75.5742467
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 6.373637,
+           "lng": -75.4734099
+         },
+         "southwest": {
+           "lat": 6.163719,
+           "lng": -75.7193741
+         }
+       }
+     },
+     "place_id": "ChIJ291STu8oRI4RcqxwksPWL3I",
+     "types": [
+       "administrative_area_level_2",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Arauca",
+         "short_name": "Arauca",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Arauca",
+         "short_name": "Arauca",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Arauca",
+         "short_name": "Arauca",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Arauca, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 7.0970989,
+           "lng": -70.697514
+         },
+         "southwest": {
+           "lat": 7.055244999999999,
+           "lng": -70.7798241
+         }
+       },
+       "location": {
+         "lat": 7.076172,
+         "lng": -70.71045699999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 7.0970989,
+           "lng": -70.697514
+         },
+         "southwest": {
+           "lat": 7.055244999999999,
+           "lng": -70.7798241
+         }
+       }
+     },
+     "place_id": "ChIJWT5xbqLrb44RopF3F--a8zA",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Barranquilla",
+         "short_name": "Barranquilla",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Barranquilla",
+         "short_name": "Barranquilla",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Atlantico",
+         "short_name": "Atlantico",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Barranquilla, Atlantico, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 11.0463319,
+           "lng": -74.7585391
+         },
+         "southwest": {
+           "lat": 10.921292,
+           "lng": -74.877496
+         }
+       },
+       "location": {
+         "lat": 11.0041072,
+         "lng": -74.80698129999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 11.0463319,
+           "lng": -74.7585391
+         },
+         "southwest": {
+           "lat": 10.921292,
+           "lng": -74.877496
+         }
+       }
+     },
+     "place_id": "ChIJBeYq0UQt9I4Rshe5gUWEMyY",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Cartagena",
+         "short_name": "Cartagena",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cartagena Province",
+         "short_name": "Cartagena Province",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Bolivar",
+         "short_name": "Bolivar",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Cartagena, Cartagena Province, Bolivar, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 10.4555439,
+           "lng": -75.450526
+         },
+         "southwest": {
+           "lat": 10.3448536,
+           "lng": -75.56652489999999
+         }
+       },
+       "location": {
+         "lat": 10.3932277,
+         "lng": -75.4832311
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 10.4555439,
+           "lng": -75.450526
+         },
+         "southwest": {
+           "lat": 10.3448536,
+           "lng": -75.56652489999999
+         }
+       }
+     },
+     "place_id": "ChIJUROdrucl9o4RyiY_Ay45YbE",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Tunja",
+         "short_name": "Tunja",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Tunja",
+         "short_name": "Tunja",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Boyaca",
+         "short_name": "Boyaca",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Tunja, Boyaca, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 5.584369,
+           "lng": -73.32954099999999
+         },
+         "southwest": {
+           "lat": 5.494219,
+           "lng": -73.382941
+         }
+       },
+       "location": {
+         "lat": 5.5446422,
+         "lng": -73.3575572
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 5.584369,
+           "lng": -73.32954099999999
+         },
+         "southwest": {
+           "lat": 5.494219,
+           "lng": -73.382941
+         }
+       }
+     },
+     "place_id": "ChIJW7p_iS58ao4RjKaaa37an6w",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Manizales",
+         "short_name": "Manizales",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Manizales",
+         "short_name": "Manizales",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Caldas",
+         "short_name": "Caldas",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Manizales, Caldas, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 5.117414999999999,
+           "lng": -75.41146499999999
+         },
+         "southwest": {
+           "lat": 5.019979999999999,
+           "lng": -75.555821
+         }
+       },
+       "location": {
+         "lat": 5.0629743,
+         "lng": -75.5027698
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 5.117414999999999,
+           "lng": -75.41146499999999
+         },
+         "southwest": {
+           "lat": 5.019979999999999,
+           "lng": -75.555821
+         }
+       }
+     },
+     "place_id": "ChIJO85CavpvR44RHBTqI2TPY6g",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Florencia",
+         "short_name": "Florencia",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Florencia",
+         "short_name": "Florencia",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Caquetá",
+         "short_name": "Caquetá",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Florencia, Caquetá, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 1.644466,
+           "lng": -75.5770509
+         },
+         "southwest": {
+           "lat": 1.593272,
+           "lng": -75.6306331
+         }
+       },
+       "location": {
+         "lat": 1.6153858,
+         "lng": -75.60423639999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 1.644466,
+           "lng": -75.5770509
+         },
+         "southwest": {
+           "lat": 1.593272,
+           "lng": -75.6306331
+         }
+       }
+     },
+     "place_id": "ChIJLxS6cRpOJI4RRNR2E9LDjUA",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Yopal",
+         "short_name": "Yopal",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Yopal",
+         "short_name": "Yopal",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Casanare",
+         "short_name": "Casanare",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Yopal, Casanare, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 5.3560259,
+           "lng": -72.37039899999999
+         },
+         "southwest": {
+           "lat": 5.309565,
+           "lng": -72.4116031
+         }
+       },
+       "location": {
+         "lat": 5.348903,
+         "lng": -72.40052299999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 5.3560259,
+           "lng": -72.37039899999999
+         },
+         "southwest": {
+           "lat": 5.309565,
+           "lng": -72.4116031
+         }
+       }
+     },
+     "place_id": "ChIJy9etk8oNa44R_gx3JEq830Y",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Popayán",
+         "short_name": "Popayán",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Popayán",
+         "short_name": "Popayán",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cauca",
+         "short_name": "Cauca",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Popayán, Cauca, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 2.4971549,
+           "lng": -76.550932
+         },
+         "southwest": {
+           "lat": 2.417615,
+           "lng": -76.64893599999999
+         }
+       },
+       "location": {
+         "lat": 2.4448143,
+         "lng": -76.6147395
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 2.4971549,
+           "lng": -76.550932
+         },
+         "southwest": {
+           "lat": 2.417615,
+           "lng": -76.64893599999999
+         }
+       }
+     },
+     "place_id": "ChIJfdQowBEDMI4RTqWHCX_WC4g",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Valledupar",
+         "short_name": "Valledupar",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Valledupar",
+         "short_name": "Valledupar",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cesar",
+         "short_name": "Cesar",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Valledupar, Cesar, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 10.501783,
+           "lng": -73.222143
+         },
+         "southwest": {
+           "lat": 10.427229,
+           "lng": -73.2943559
+         }
+       },
+       "location": {
+         "lat": 10.4742449,
+         "lng": -73.2436335
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 10.501783,
+           "lng": -73.222143
+         },
+         "southwest": {
+           "lat": 10.427229,
+           "lng": -73.2943559
+         }
+       }
+     },
+     "place_id": "ChIJ13HP1rW5io4RSiNMsSU2pIQ",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Quibdo",
+         "short_name": "Quibdo",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Quibdó",
+         "short_name": "Quibdó",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Choco",
+         "short_name": "Choco",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Quibdo, Quibdó, Choco, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 5.716842,
+           "lng": -76.627053
+         },
+         "southwest": {
+           "lat": 5.674424000000001,
+           "lng": -76.66353289999999
+         }
+       },
+       "location": {
+         "lat": 5.695633,
+         "lng": -76.649812
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 5.716842,
+           "lng": -76.627053
+         },
+         "southwest": {
+           "lat": 5.674424000000001,
+           "lng": -76.66353289999999
+         }
+       }
+     },
+     "place_id": "ChIJqegIfHSPSI4RimvoX30NaLk",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Montería",
+         "short_name": "Montería",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Montería",
+         "short_name": "Montería",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cordoba",
+         "short_name": "Cordoba",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Montería, Cordoba, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 8.807058999999999,
+           "lng": -75.847225
+         },
+         "southwest": {
+           "lat": 8.714038,
+           "lng": -75.916715
+         }
+       },
+       "location": {
+         "lat": 8.750983,
+         "lng": -75.8785348
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 8.807058999999999,
+           "lng": -75.847225
+         },
+         "southwest": {
+           "lat": 8.714038,
+           "lng": -75.916715
+         }
+       }
+     },
+     "place_id": "ChIJrTFwpeUvWo4RoMDXLq3L4ZI",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Bogota",
+         "short_name": "Bogota",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Bogota",
+         "short_name": "Bogota",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Bogota, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 4.8371311,
+           "lng": -73.99197699999999
+         },
+         "southwest": {
+           "lat": 4.459464,
+           "lng": -74.223637
+         }
+       },
+       "location": {
+         "lat": 4.710988599999999,
+         "lng": -74.072092
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 4.8371311,
+           "lng": -73.99197699999999
+         },
+         "southwest": {
+           "lat": 4.459464,
+           "lng": -74.223637
+         }
+       }
+     },
+     "place_id": "ChIJKcumLf2bP44RFDmjIFVjnSM",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Inírida",
+         "short_name": "Inírida",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Inírida",
+         "short_name": "Inírida",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Guainia",
+         "short_name": "Guainia",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       },
+       {
+         "long_name": "940001",
+         "short_name": "940001",
+         "types": [
+           "postal_code"
+         ]
+       }
+     ],
+     "formatted_address": "Inírida, Guainia, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 3.880919,
+           "lng": -67.912834
+         },
+         "southwest": {
+           "lat": 3.855676099999999,
+           "lng": -67.9349991
+         }
+       },
+       "location": {
+         "lat": 3.8702044,
+         "lng": -67.92433609999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 3.880919,
+           "lng": -67.912834
+         },
+         "southwest": {
+           "lat": 3.855676099999999,
+           "lng": -67.9349991
+         }
+       }
+     },
+     "place_id": "ChIJq_7kRcBFCo4RJq2VICog5tw",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "San José Del Guaviare",
+         "short_name": "San José Del Guaviare",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "San José Del Guaviare",
+         "short_name": "San José Del Guaviare",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Guaviare",
+         "short_name": "Guaviare",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "San José Del Guaviare, Guaviare, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 2.5894021,
+           "lng": -72.62845399999999
+         },
+         "southwest": {
+           "lat": 2.549297,
+           "lng": -72.6492899
+         }
+       },
+       "location": {
+         "lat": 2.5677606,
+         "lng": -72.6396535
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 2.5894021,
+           "lng": -72.62845399999999
+         },
+         "southwest": {
+           "lat": 2.549297,
+           "lng": -72.6492899
+         }
+       }
+     },
+     "place_id": "ChIJTQKeqpl2F44RBIWK4HNVG6g",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Neiva",
+         "short_name": "Neiva",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Neiva",
+         "short_name": "Neiva",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Huila",
+         "short_name": "Huila",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Neiva, Huila, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 2.98927,
+           "lng": -75.234107
+         },
+         "southwest": {
+           "lat": 2.8859688,
+           "lng": -75.31067
+         }
+       },
+       "location": {
+         "lat": 2.9344837,
+         "lng": -75.2809001
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 2.98927,
+           "lng": -75.234107
+         },
+         "southwest": {
+           "lat": 2.8859688,
+           "lng": -75.31067
+         }
+       }
+     },
+     "place_id": "ChIJCUBrWnx0O44RmlMlu2LxrGk",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Riohacha",
+         "short_name": "Riohacha",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Riohacha",
+         "short_name": "Riohacha",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "La Guajira",
+         "short_name": "La Guajira",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Riohacha, La Guajira, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 11.558412,
+           "lng": -72.8904
+         },
+         "southwest": {
+           "lat": 11.51047,
+           "lng": -72.9389126
+         }
+       },
+       "location": {
+         "lat": 11.5384151,
+         "lng": -72.91678379999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 11.558412,
+           "lng": -72.8904
+         },
+         "southwest": {
+           "lat": 11.51047,
+           "lng": -72.9389126
+         }
+       }
+     },
+     "place_id": "ChIJ2dCRUa5ii44R0ruzgaGgtLQ",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Santa Marta",
+         "short_name": "Santa Marta",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Santa Marta",
+         "short_name": "Santa Marta",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Magdalena",
+         "short_name": "Magdalena",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Santa Marta, Magdalena, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 11.260074,
+           "lng": -74.14070099999999
+         },
+         "southwest": {
+           "lat": 11.2029764,
+           "lng": -74.224093
+         }
+       },
+       "location": {
+         "lat": 11.2403547,
+         "lng": -74.2110227
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 11.260074,
+           "lng": -74.14070099999999
+         },
+         "southwest": {
+           "lat": 11.2029764,
+           "lng": -74.224093
+         }
+       }
+     },
+     "place_id": "ChIJPRea9W_29I4RuPk6FfyVSxI",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Villavicencio",
+         "short_name": "Villavicencio",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Villavicencio",
+         "short_name": "Villavicencio",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Meta",
+         "short_name": "Meta",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Villavicencio, Meta, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 4.180090900000001,
+           "lng": -73.5414661
+         },
+         "southwest": {
+           "lat": 4.0694241,
+           "lng": -73.676654
+         }
+       },
+       "location": {
+         "lat": 4.1491688,
+         "lng": -73.6285475
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 4.180090900000001,
+           "lng": -73.5414661
+         },
+         "southwest": {
+           "lat": 4.0694241,
+           "lng": -73.676654
+         }
+       }
+     },
+     "place_id": "ChIJETIout8tPo4RwiB7HQRAflM",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Pasto",
+         "short_name": "Pasto",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Pasto",
+         "short_name": "Pasto",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Narino",
+         "short_name": "Narino",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Pasto, Narino, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 1.2484529,
+           "lng": -77.24383
+         },
+         "southwest": {
+           "lat": 1.178598,
+           "lng": -77.3106151
+         }
+       },
+       "location": {
+         "lat": 1.2058837,
+         "lng": -77.285787
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 1.2484529,
+           "lng": -77.24383
+         },
+         "southwest": {
+           "lat": 1.178598,
+           "lng": -77.3106151
+         }
+       }
+     },
+     "place_id": "ChIJcyq5YYfULo4RIqXDbFZoo0Q",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Cúcuta",
+         "short_name": "Cúcuta",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cucuta",
+         "short_name": "Cucuta",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "North Santander",
+         "short_name": "North Santander",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Cúcuta, Cucuta, North Santander, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 7.959026099999999,
+           "lng": -72.4591301
+         },
+         "southwest": {
+           "lat": 7.858494,
+           "lng": -72.5497109
+         }
+       },
+       "location": {
+         "lat": 7.8890971,
+         "lng": -72.4966896
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 7.959026099999999,
+           "lng": -72.4591301
+         },
+         "southwest": {
+           "lat": 7.858494,
+           "lng": -72.5497109
+         }
+       }
+     },
+     "place_id": "ChIJi9JdZJxFZo4Rqlzb9B9scyY",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Mocoa",
+         "short_name": "Mocoa",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Mocoa",
+         "short_name": "Mocoa",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Putumayo",
+         "short_name": "Putumayo",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Mocoa, Putumayo, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 1.162895,
+           "lng": -76.642811
+         },
+         "southwest": {
+           "lat": 1.141786,
+           "lng": -76.65929899999999
+         }
+       },
+       "location": {
+         "lat": 1.1477941,
+         "lng": -76.64812839999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 1.162895,
+           "lng": -76.642811
+         },
+         "southwest": {
+           "lat": 1.141786,
+           "lng": -76.65929899999999
+         }
+       }
+     },
+     "place_id": "ChIJ-QFNp4ayKI4RYKHYbO7AVgg",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Armenia",
+         "short_name": "Armenia",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Armenia",
+         "short_name": "Armenia",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Quindio",
+         "short_name": "Quindio",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Armenia, Quindio, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 4.582116,
+           "lng": -75.6417201
+         },
+         "southwest": {
+           "lat": 4.502427,
+           "lng": -75.7193791
+         }
+       },
+       "location": {
+         "lat": 4.535000399999999,
+         "lng": -75.6756888
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 4.582116,
+           "lng": -75.6417201
+         },
+         "southwest": {
+           "lat": 4.502427,
+           "lng": -75.7193791
+         }
+       }
+     },
+     "place_id": "ChIJwTtl5q31OI4RCIhduUrKxsI",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Pereira",
+         "short_name": "Pereira",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Pereira",
+         "short_name": "Pereira",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Risaralda",
+         "short_name": "Risaralda",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Pereira, Risaralda, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 4.8281771,
+           "lng": -75.657184
+         },
+         "southwest": {
+           "lat": 4.781372,
+           "lng": -75.77033899999999
+         }
+       },
+       "location": {
+         "lat": 4.8087174,
+         "lng": -75.690601
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 4.8281771,
+           "lng": -75.657184
+         },
+         "southwest": {
+           "lat": 4.781372,
+           "lng": -75.77033899999999
+         }
+       }
+     },
+     "place_id": "ChIJ_cFW60iHOI4RvN_x-RCUs5U",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "San Andrés and Providencia",
+         "short_name": "San Andrés and Providencia",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "San Andrés and Providencia, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 13.3946561,
+           "lng": -81.3491839
+         },
+         "southwest": {
+           "lat": 12.480181,
+           "lng": -81.73589500000001
+         }
+       },
+       "location": {
+         "lat": 12.5567324,
+         "lng": -81.7185253
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 13.3946561,
+           "lng": -81.3491839
+         },
+         "southwest": {
+           "lat": 12.480181,
+           "lng": -81.73589500000001
+         }
+       }
+     },
+     "place_id": "ChIJ4fBdUFXSBI8RKYUk0Gcbqkg",
+     "types": [
+       "administrative_area_level_1",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Bucaramanga",
+         "short_name": "Bucaramanga",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Bucaramanga",
+         "short_name": "Bucaramanga",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Santander",
+         "short_name": "Santander",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Bucaramanga, Santander, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 7.166567,
+           "lng": -73.09386590000001
+         },
+         "southwest": {
+           "lat": 7.071845,
+           "lng": -73.17209009999999
+         }
+       },
+       "location": {
+         "lat": 7.119349,
+         "lng": -73.1227416
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 7.166567,
+           "lng": -73.09386590000001
+         },
+         "southwest": {
+           "lat": 7.071845,
+           "lng": -73.17209009999999
+         }
+       }
+     },
+     "place_id": "ChIJ7cBR93oVaI4RbMNIEVXkoHU",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Sincelejo",
+         "short_name": "Sincelejo",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Sincelejo",
+         "short_name": "Sincelejo",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Sucre",
+         "short_name": "Sucre",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Sincelejo, Sucre, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 9.3265688,
+           "lng": -75.3702579
+         },
+         "southwest": {
+           "lat": 9.2578139,
+           "lng": -75.41940079999999
+         }
+       },
+       "location": {
+         "lat": 9.3045773,
+         "lng": -75.39055669999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 9.3265688,
+           "lng": -75.3702579
+         },
+         "southwest": {
+           "lat": 9.2578139,
+           "lng": -75.41940079999999
+         }
+       }
+     },
+     "place_id": "ChIJVykXQUgUWY4RNFOe93u4tdQ",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Ibagué",
+         "short_name": "Ibagué",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Ibague",
+         "short_name": "Ibague",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Tolima",
+         "short_name": "Tolima",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Ibagué, Ibague, Tolima, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 4.467374,
+           "lng": -75.101591
+         },
+         "southwest": {
+           "lat": 4.357205,
+           "lng": -75.27196409999999
+         }
+       },
+       "location": {
+         "lat": 4.444675999999999,
+         "lng": -75.24243799999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 4.467374,
+           "lng": -75.101591
+         },
+         "southwest": {
+           "lat": 4.357205,
+           "lng": -75.27196409999999
+         }
+       }
+     },
+     "place_id": "ChIJX01fEZHEOI4RHkDSWTjkyuA",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Cali",
+         "short_name": "Cali",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Cali",
+         "short_name": "Cali",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Valle del Cauca",
+         "short_name": "Valle del Cauca",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       }
+     ],
+     "formatted_address": "Cali, Valle del Cauca, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 3.505554,
+           "lng": -76.46082489999999
+         },
+         "southwest": {
+           "lat": 3.2845748,
+           "lng": -76.590503
+         }
+       },
+       "location": {
+         "lat": 3.4516467,
+         "lng": -76.5319854
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 3.505554,
+           "lng": -76.46082489999999
+         },
+         "southwest": {
+           "lat": 3.2845748,
+           "lng": -76.590503
+         }
+       }
+     },
+     "place_id": "ChIJ8bNLzPCmMI4RaGGuUum1Dx8",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Mitú",
+         "short_name": "Mitú",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Mitú",
+         "short_name": "Mitú",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Vaupes",
+         "short_name": "Vaupes",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       },
+       {
+         "long_name": "970001",
+         "short_name": "970001",
+         "types": [
+           "postal_code"
+         ]
+       }
+     ],
+     "formatted_address": "Mitú, Vaupes, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 1.2709499,
+           "lng": -70.225751
+         },
+         "southwest": {
+           "lat": 1.233398,
+           "lng": -70.241484
+         }
+       },
+       "location": {
+         "lat": 1.2521739,
+         "lng": -70.23361799999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 1.2709499,
+           "lng": -70.225751
+         },
+         "southwest": {
+           "lat": 1.233398,
+           "lng": -70.241484
+         }
+       }
+     },
+     "place_id": "ChIJAcvX4nulBI4RNInCZ6V10iY",
+     "types": [
+       "locality",
+       "political"
+     ]
+   },
+   {
+     "address_components": [
+       {
+         "long_name": "Puerto Carreño",
+         "short_name": "Puerto Carreño",
+         "types": [
+           "locality",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Puerto Carreño",
+         "short_name": "Puerto Carreño",
+         "types": [
+           "administrative_area_level_2",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Vichada",
+         "short_name": "Vichada",
+         "types": [
+           "administrative_area_level_1",
+           "political"
+         ]
+       },
+       {
+         "long_name": "Colombia",
+         "short_name": "CO",
+         "types": [
+           "country",
+           "political"
+         ]
+       },
+       {
+         "long_name": "990001",
+         "short_name": "990001",
+         "types": [
+           "postal_code"
+         ]
+       }
+     ],
+     "formatted_address": "Puerto Carreño, Vichada, Colombia",
+     "geometry": {
+       "bounds": {
+         "northeast": {
+           "lat": 6.200813,
+           "lng": -67.4740461
+         },
+         "southwest": {
+           "lat": 6.168718999999999,
+           "lng": -67.502878
+         }
+       },
+       "location": {
+         "lat": 6.1899117,
+         "lng": -67.48256959999999
+       },
+       "location_type": "APPROXIMATE",
+       "viewport": {
+         "northeast": {
+           "lat": 6.200813,
+           "lng": -67.4740461
+         },
+         "southwest": {
+           "lat": 6.168718999999999,
+           "lng": -67.502878
+         }
+       }
+     },
+     "place_id": "ChIJnesZ6TEZdo4RODhrxR5yqIc",
+     "types": [
+       "locality",
+       "political"
+     ]
+   }
+]

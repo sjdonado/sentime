@@ -1,4 +1,4 @@
-# tsac
+# Citizen sentiment analysis
 
 ## How to run?
 ```

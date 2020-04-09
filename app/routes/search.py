@@ -3,6 +3,7 @@ import json
 
 import twint
 import asyncio
+import geopy
 
 from queue import Queue
 from threading import Thread
@@ -33,7 +34,7 @@ def launch_query(q, text):
 
     c = twint.Config()
     c.Search = text
-    c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d')
+    c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
     c.Limit = 1
     c.Filter_retweets = True
     c.Store_object = True
@@ -60,6 +61,7 @@ def launch_query(q, text):
         }
       })
 
+      print("{} DONE!".format(city['formatted_address']), flush=True)
       q.task_done()
 
     twint.run.Search(c, callback=callback)
@@ -91,4 +93,3 @@ def search(message):
     socketio.emit('tweets', { 'status': 'finished' })
   else:
     socketio.emit('tweets', { 'status': 'Wait for task in process' })
-

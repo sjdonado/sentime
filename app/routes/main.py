@@ -12,8 +12,6 @@ main_bp = Blueprint('main_bp', __name__,
 def index():
   return render_template(
     'index.html',
-    title = "Citizens sentiment analysis through their tweets",
+    title = "Sentime",
     text = session.get('text') if session.get('text') else '',
-    access_token = 'pk.eyJ1IjoicGFzdG9yaXpvaiIsImEiOiJjazV6cDh2YnAwMjBhM2ptbWhveXpuOGw5In0.97o-ntf0qtgJoOmg9l3ESA',
   )
-

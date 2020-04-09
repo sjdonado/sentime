@@ -6,3 +6,4 @@ twint
 asyncio
 flask-socketio
 eventlet
+geopy

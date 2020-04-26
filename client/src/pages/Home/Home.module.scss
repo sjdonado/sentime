@@ -1,21 +1,8 @@
-.container {
-  width: 100vw;
-  height: 100vh;
-  padding: 6px;
-}
-
-.title {
-  flex: 8;
-  font-size: 34px;
-}
-.right {
-  flex: 2;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  button {
-    margin-left: 12px;
-  }
+.map {
+  flex: 7;
+  margin-top: 12px;
+  height: 500px;
+  max-width: 700;
 }
 
 .statistic {

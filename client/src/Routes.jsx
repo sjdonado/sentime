@@ -10,8 +10,11 @@ import {
   Redirect,
 } from 'react-router-dom';
 
+import { Flex } from '@chakra-ui/core';
+
 import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
+import Appbar from './components/Appbar';
 
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
@@ -38,7 +41,12 @@ function Routes() {
     {
       isPublic: false,
       path: '/home',
-      children: <Home userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />,
+      children: (
+        <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
+          <Appbar userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />
+          <Home />
+        </Flex>
+      ),
     },
   ];
 

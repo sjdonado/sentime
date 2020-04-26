@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import Proptypes from 'prop-types';
 
 import {
+  Text,
   Input,
   FormControl,
   FormLabel,
-  FormHelperText,
   Button,
   useToast,
 } from '@chakra-ui/core';
-
-import { useHistory } from 'react-router-dom';
 
 import styles from './Login.module.scss';
 
@@ -18,7 +16,6 @@ import { login } from '../../services/userService';
 
 function Login({ setUserEmail }) {
   const toast = useToast();
-  const history = useHistory();
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,9 +27,8 @@ function Login({ setUserEmail }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const response = await login(email, password);
-      console.log(response);
-      setUserEmail(email);
+      const { data } = await login(email, password);
+      setUserEmail(data.email);
     } catch ({ message }) {
       toast({
         title: message,
@@ -53,9 +49,9 @@ function Login({ setUserEmail }) {
 
   return (
     <div className={styles.container}>
-      <h1>Login</h1>
+      <Text fontSize="5xl">Sentime</Text>
       <FormControl className={styles['form-control']}>
-        <FormLabel htmlFor="email">Email address</FormLabel>
+        <FormLabel htmlFor="email">Correo electrónico</FormLabel>
         <Input
           type="email"
           name="email"
@@ -63,12 +59,9 @@ function Login({ setUserEmail }) {
           aria-describedby="email-helper-text"
           onChange={handleInputChange}
         />
-        <FormHelperText id="email-helper-text">
-          We&apos;ll never share your email.
-        </FormHelperText>
       </FormControl>
       <FormControl className={styles['form-control']}>
-        <FormLabel htmlFor="password">Password</FormLabel>
+        <FormLabel htmlFor="password">Contraseña</FormLabel>
         <Input
           type="password"
           name="password"
@@ -84,9 +77,8 @@ function Login({ setUserEmail }) {
         variant="outline"
         onClick={handleSubmit}
       >
-        Submit
+        Ingesar
       </Button>
-      <Button onClick={() => history.push('/signup')}>Go to Signup</Button>
     </div>
   );
 }

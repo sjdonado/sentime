@@ -15,11 +15,11 @@ def login():
     return jsonify({ 'error': 'Email and password are required' }), 400
 
   if content['email'] != 'test@test.com' or content['password'] != '12345678':
-    return jsonify({ 'error': 'User not found' }), 404
+    return jsonify({ 'error': 'Usuario no encontrado' }), 404
 
   # User id from db
   session['user'] = 1
-  return jsonify({ 'data': 'testing' })
+  return jsonify({ 'email': content['email'] })
 
 @users_bp.route('/users/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)

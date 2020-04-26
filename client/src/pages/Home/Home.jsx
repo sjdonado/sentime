@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import Proptypes from 'prop-types';
 
 import socketIOClient from 'socket.io-client';
@@ -20,7 +20,6 @@ import {
 import styles from './Home.module.scss';
 
 import { API_URL, GOOGLE_MAPS_API_KEY } from '../../environment';
-import { userLogout } from '../../services/userService';
 
 const Map = withScriptjs(withGoogleMap(({ results }) => {
   const data = results.map(({ lat, lng, tweets }) => ({
@@ -89,15 +88,6 @@ function Home({ userEmail, logout }) {
     return () => socket.off('tweets');
   });
 
-  const handleLogout = async () => {
-    try {
-      await userLogout();
-      logout(null);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const handleSearch = (e) => {
     e.preventDefault();
     socket.emit('search', JSON.stringify({ query }));
@@ -106,16 +96,7 @@ function Home({ userEmail, logout }) {
   const isProcesing = searchData.status === 'processing';
 
   return (
-    <div className={styles.container}>
-      <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" marginBottom="6">
-        <h1 className={styles.title}>Sentime</h1>
-        <div className={styles.right}>
-          <Text textAlign="center">
-            {userEmail}
-          </Text>
-          <Button variantColor="teal" variant="outline" onClick={handleLogout}>Salir</Button>
-        </div>
-      </Flex>
+    <>
       <Flex
         as="form"
         width={[
@@ -158,53 +139,54 @@ function Home({ userEmail, logout }) {
           Buscar
         </Button>
       </Flex>
-      <Flex flexWrap="wrap">
-        <Map
-          results={searchData.results}
-          googleMapURL={googleMapURL}
-          loadingElement={<div style={{ height: '100%', maxWidth: 700 }} />}
-          containerElement={(
-            <div style={{
-              flex: 7, marginTop: 12, height: '500px', maxWidth: 700,
-            }}
-            />
-          )}
-          mapElement={<div style={{ height: '100%', maxWidth: 700 }} />}
-        />
-        {(searchData.results.length > 0 || isProcesing) && (
-        <Flex flexDirection="column" flex="3" padding="12px">
-          <Progress
-            color="teal"
-            isAnimated={isProcesing}
-            hasStripe={isProcesing}
-            value={(searchData.results.length / 32) * 100}
-            marginBottom="3"
+      {(searchData.results.length > 0 || isProcesing) ? (
+        <Flex flexWrap="wrap">
+          <Map
+            results={searchData.results}
+            googleMapURL={googleMapURL}
+            loadingElement={<div className={styles.map} />}
+            containerElement={<div className={styles.map} />}
+            mapElement={<div className={styles.map} />}
           />
-          <Text>{`Estado: ${searchData.status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
-          <Text>{`Departamentos: ${searchData.results.length} de 32`}</Text>
-          <Text>{`Total: ${searchData.tweetsAcum} tweets`}</Text>
-          <Divider />
-          <List spacing={3} height="400px" overflow="scroll">
-            {searchData.results.map(({ city, tweets }) => (
-              <ListItem className={styles.statistic}>
-                <ListIcon icon="check-circle" color="green.500" />
-                <Flex justifyContent="space-between" width="100%">
-                  <Text>{city}</Text>
-                  <Text>{`${tweets} tweets`}</Text>
-                </Flex>
-              </ListItem>
-            ))}
-          </List>
+          <Flex flexDirection="column" flex="3" padding="12px">
+            <Progress
+              color="teal"
+              isAnimated={isProcesing}
+              hasStripe={isProcesing}
+              value={(searchData.results.length / 32) * 100}
+              marginBottom="3"
+            />
+            <Text>{`Estado: ${searchData.status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
+            <Text>{`Departamentos: ${searchData.results.length} de 32`}</Text>
+            <Text>{`Total: ${searchData.tweetsAcum} tweets`}</Text>
+            <Divider />
+            <List spacing={3} height="400px" overflow="scroll">
+              {searchData.results.map(({ city, tweets }) => (
+                <ListItem className={styles.statistic}>
+                  <ListIcon icon="check-circle" color="green.500" />
+                  <Flex justifyContent="space-between" width="100%">
+                    <Text>{city}</Text>
+                    <Text>{`${tweets} tweets`}</Text>
+                  </Flex>
+                </ListItem>
+              ))}
+            </List>
+          </Flex>
         </Flex>
-        )}
-      </Flex>
-    </div>
+      ) : (
+        <Text marginTop="6" textAlign="center">No tienes búsquedas aún :(</Text>
+      )}
+    </>
   );
 }
 
 Home.propTypes = {
-  userEmail: Proptypes.string.isRequired,
+  userEmail: Proptypes.string,
   logout: Proptypes.func.isRequired,
+};
+
+Home.defaultProps = {
+  userEmail: '',
 };
 
 export default Home;

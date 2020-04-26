@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Proptypes from 'prop-types';
 
 import socketIOClient from 'socket.io-client';
 import { withScriptjs, withGoogleMap, GoogleMap } from 'react-google-maps';
-// import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
+import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer';
 
 import {
   Flex,
@@ -14,51 +14,73 @@ import {
   ListItem,
   ListIcon,
   Progress,
+  Divider,
 } from '@chakra-ui/core';
 
 import styles from './Home.module.scss';
 
 import { API_URL, GOOGLE_MAPS_API_KEY } from '../../environment';
-import { logout } from '../../services/userService';
+import { userLogout } from '../../services/userService';
 
-const Map = withScriptjs(withGoogleMap(() => (
-  <GoogleMap
-    defaultZoom={5}
-    defaultCenter={{ lat: 4.1156735, lng: -72.9301367 }}
-  />
-)));
+const Map = withScriptjs(withGoogleMap(({ results }) => {
+  const data = results.map(({ lat, lng, tweets }) => ({
+    location: new window.google.maps.LatLng(lat, lng),
+    weight: tweets.length,
+  }));
+  return (
+    <GoogleMap
+      defaultZoom={5}
+      defaultCenter={{ lat: 4.1156735, lng: -72.9301367 }}
+    >
+      <HeatmapLayer data={data} radius={20} />
+    </GoogleMap>
+  );
+}));
 
 const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=visualization`;
 const socket = socketIOClient(API_URL);
 
-function Home(props) {
-  const [searchData, setSearchData] = useState({
-    tweetsAcum: 0,
+/**
+ * TEST:
+  {
+    tweetsAcum: 3,
     results: [{
       city: 'Armenia, Quindio, Colombia',
       tweets: 3,
     }],
+  }
+*/
+function Home({ userEmail, logout }) {
+  const [searchData, setSearchData] = useState({
+    status: '',
+    tweetsAcum: 0,
+    results: [],
   });
   const [query, setQuery] = useState('');
 
   const handleOnTweets = ({ status, data }) => {
     if (status === 'processing') {
       const { city, tweets } = data;
-      console.log('tweets =>', tweets);
+      // console.log('tweets =>', tweets);
       setSearchData({
+        status,
         tweetsAcum: searchData.tweetsAcum + tweets.length,
         results: [
-          ...searchData.results,
           {
             city: city.formatted_address,
+            lat: Number(city.geometry.location.lat),
+            lng: Number(city.geometry.location.lng),
             tweets: tweets.length,
           },
+          ...searchData.results,
         ],
       });
-      // heatmapData.push({
-      //   location: new google.maps.LatLng(Number(city.geometry.location.lat), Number(city.geometry.location.lng)),
-      //   weight: tweets.length,
-      // });
+    }
+    if (status === 'finished') {
+      setSearchData({
+        ...searchData,
+        status,
+      });
     }
   };
 
@@ -69,17 +91,19 @@ function Home(props) {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      props.logout(null);
+      await userLogout();
+      logout(null);
     } catch (err) {
       console.log(err);
     }
   };
 
   const handleSearch = (e) => {
-    e.preventDevault();
+    e.preventDefault();
     socket.emit('search', JSON.stringify({ query }));
   };
+
+  const isProcesing = searchData.status === 'processing';
 
   return (
     <div className={styles.container}>
@@ -87,7 +111,7 @@ function Home(props) {
         <h1 className={styles.title}>Sentime</h1>
         <div className={styles.right}>
           <Text textAlign="center">
-            test@test.com
+            {userEmail}
           </Text>
           <Button variantColor="teal" variant="outline" onClick={handleLogout}>Salir</Button>
         </div>
@@ -101,6 +125,7 @@ function Home(props) {
           '40%', // 992px upwards
         ]}
         alignItems="center"
+        onSubmit={handleSearch}
       >
         <PseudoBox
           as="input"
@@ -121,35 +146,45 @@ function Home(props) {
           }}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          disabled={searchData.results.length > 0}
+          disabled={isProcesing}
         />
         <Button
+          type="submit"
           variantColor="teal"
           size="md"
           marginLeft="3"
-          onClick={handleSearch}
-          disabled={searchData.results.length > 0}
+          disabled={isProcesing}
         >
           Buscar
         </Button>
       </Flex>
       <Flex flexWrap="wrap">
         <Map
+          results={searchData.results}
           googleMapURL={googleMapURL}
           loadingElement={<div style={{ height: '100%', maxWidth: 700 }} />}
           containerElement={(
             <div style={{
-              flex: 7, marginTop: 12, height: '400px', maxWidth: 700,
+              flex: 7, marginTop: 12, height: '500px', maxWidth: 700,
             }}
             />
           )}
           mapElement={<div style={{ height: '100%', maxWidth: 700 }} />}
         />
-        {searchData.results.length > 0 && (
+        {(searchData.results.length > 0 || isProcesing) && (
         <Flex flexDirection="column" flex="3" padding="12px">
-          <Progress color="teal" hasStripe isAnimated value={(searchData.results.length / 32) * 100} marginBottom="3" />
-          <Text marginBottom="3">{`Total: ${searchData.tweetsAcum} tweets`}</Text>
-          <List spacing={3}>
+          <Progress
+            color="teal"
+            isAnimated={isProcesing}
+            hasStripe={isProcesing}
+            value={(searchData.results.length / 32) * 100}
+            marginBottom="3"
+          />
+          <Text>{`Estado: ${searchData.status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
+          <Text>{`Departamentos: ${searchData.results.length} de 32`}</Text>
+          <Text>{`Total: ${searchData.tweetsAcum} tweets`}</Text>
+          <Divider />
+          <List spacing={3} height="400px" overflow="scroll">
             {searchData.results.map(({ city, tweets }) => (
               <ListItem className={styles.statistic}>
                 <ListIcon icon="check-circle" color="green.500" />
@@ -168,6 +203,7 @@ function Home(props) {
 }
 
 Home.propTypes = {
+  userEmail: Proptypes.string.isRequired,
   logout: Proptypes.func.isRequired,
 };
 

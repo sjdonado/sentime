@@ -10,7 +10,7 @@ export const login = (email, password) => axios({
   withCredentials: true,
 });
 
-export const logout = () => axios({
+export const userLogout = () => axios({
   method: 'post',
   url: `${API_URL}/${basePath}/logout`,
 });

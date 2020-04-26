@@ -21,7 +21,7 @@ const USER_COOKIE_NAME = 'session-user';
 function Routes() {
   const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
 
-  const setUserData = (data) => {
+  const setUserEmail = (data) => {
     setCookie(USER_COOKIE_NAME, data, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
   };
 
@@ -33,12 +33,12 @@ function Routes() {
     {
       isPublic: true,
       path: '/login',
-      children: <Login setUserData={setUserData} />,
+      children: <Login setUserEmail={setUserEmail} />,
     },
     {
       isPublic: false,
       path: '/home',
-      children: <Home logout={logout} />,
+      children: <Home userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />,
     },
   ];
 

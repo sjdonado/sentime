@@ -12,15 +12,27 @@ services:
       FLASK_ENV: development
       SECRET_KEY: 7a197fe73206411f84ca66fc
       REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgres://sentime_user:root_12345@db:5432/sentime
     depends_on:
       - redis
   redis:
     image: redis
+    restart: unless-stopped
     entrypoint: redis-server --appendonly yes
     volumes:
       - redis-data:/data
     ports:
       - 6379:6379
+  db:
+    image: postgres:12.0-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sentime
+      POSTGRES_USER: sentime_user
+      POSTGRES_PASSWORD: root_12345
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
 volumes:
   redis-data: ~
+  postgres: ~

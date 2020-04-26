@@ -13,9 +13,10 @@ import {
 import { useHistory } from 'react-router-dom';
 
 import styles from './Login.module.scss';
-import { login } from '../../db/user';
 
-function Login({ setUserToken }) {
+import { login } from '../../services/userService';
+
+function Login({ setUserData }) {
   const toast = useToast();
   const history = useHistory();
 
@@ -29,8 +30,9 @@ function Login({ setUserToken }) {
     try {
       setIsLoading(true);
       const { email, password } = formData;
-      const { user } = await login(email, password);
-      setUserToken(user.uid);
+      const response = await login(email, password);
+      console.log(response);
+      setUserData(email);
     } catch ({ message }) {
       toast({
         title: message,
@@ -90,7 +92,7 @@ function Login({ setUserToken }) {
 }
 
 Login.propTypes = {
-  setUserToken: Proptypes.func.isRequired,
+  setUserData: Proptypes.func.isRequired,
 };
 
 export default Login;

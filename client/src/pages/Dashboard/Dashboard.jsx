@@ -1,66 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import Proptypes from 'prop-types';
 
+import socketIOClient from 'socket.io-client';
+// import { GoogleMap, Marker } from "react-google-maps"
+// import HeatmapLayer from "react-google-maps/lib/components/visualization/HeatmapLayer";
+
 import {
   Button,
-  CircularProgress,
-  Stack,
-  Box,
-  Heading,
-  Text,
 } from '@chakra-ui/core';
 
-import { allUsers } from '../../db/user';
+import styles from './Dashboard.module.scss';
 
-function User({ name, lastName }) {
-  return (
-    <Box p={5} shadow="md" borderWidth="1px">
-      <Heading fontSize="xl">{name}</Heading>
-      <Text mt={4}>{lastName}</Text>
-    </Box>
-  );
-}
+import { API_URL } from '../../environment';
+import { logout } from '../../services/userService';
 
-User.propTypes = {
-  name: Proptypes.string.isRequired,
-  lastName: Proptypes.string.isRequired,
-};
-
-function Dashboard({ logout }) {
-  const [users, setUsers] = useState();
+function Dashboard(props) {
+  const [response, setResponse] = useState('');
 
   useEffect(() => {
-    // Only execute if component did mount or updated
-    const loadUsers = async () => {
-      try {
-        const { docs } = await allUsers();
-        setUsers(docs.map((user) => user.data()));
-        console.log(users);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    if (!users) {
-      loadUsers();
-    }
-  }, [users, setUsers]);
+    const socket = socketIOClient(API_URL);
+    socket.on('tweets', (data) => {
+      setResponse(data);
+    });
+  }, []);
 
+  console.log('response', response);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      props.logout(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
-    <>
-      <h1>Dashboard</h1>
-      <Button onClick={logout}>Logout</Button>
-      {users ? (
-        <Stack spacing={8}>
-          {users.map(({ name, email, lastName }) => (
-            <User
-              key={email}
-              name={name}
-              lastName={lastName}
-            />
-          ))}
-        </Stack>
-      ) : <CircularProgress isIndeterminate />}
-    </>
+    <div>
+      <div className={styles.header}>
+        <h1 className={styles.title}>Sentime</h1>
+        <div className={styles.right}>
+          <span>test@test.com</span>
+          <Button onClick={handleLogout}>Logout</Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

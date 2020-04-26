@@ -16,27 +16,29 @@ import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard/Dashboard';
 
-function Routes() {
-  const [cookies, setCookie, removeCookie] = useCookies(['user-token']);
+const USER_COOKIE_NAME = 'session-user';
 
-  const setUserToken = (uid) => {
-    setCookie('user-token', uid, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
+function Routes() {
+  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
+
+  const setUserData = (data) => {
+    setCookie(USER_COOKIE_NAME, data, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
   };
 
   const logout = () => {
-    removeCookie('user-token', { path: '/' });
+    removeCookie(USER_COOKIE_NAME, { path: '/' });
   };
 
   const routes = [
     {
       isPublic: true,
       path: '/login',
-      children: <Login setUserToken={setUserToken} />,
+      children: <Login setUserData={setUserData} />,
     },
     {
       isPublic: false,
       path: '/dashboard',
-      children: <Dashboard setUserToken={setUserToken} logout={logout} />,
+      children: <Dashboard logout={logout} />,
     },
   ];
 
@@ -46,11 +48,11 @@ function Routes() {
         {routes.map(({ isPublic, path, children }) => (
           <Route key={path} path={path}>
             {isPublic ? (
-              <PublicRoute isAuth={Boolean(cookies['user-token'])}>
+              <PublicRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
                 {children}
               </PublicRoute>
             ) : (
-              <PrivateRoute isAuth={Boolean(cookies['user-token'])}>
+              <PrivateRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
                 {children}
               </PrivateRoute>
             )}

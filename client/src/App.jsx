@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { ThemeProvider, theme, CSSReset } from '@chakra-ui/core';
-import { CookiesProvider } from 'react-cookie';
 
 import Routes from './Routes';
 
@@ -19,14 +18,12 @@ const customTheme = {
 
 function App() {
   return (
-    <CookiesProvider>
-      <ThemeProvider
-        theme={customTheme}
-      >
-        <CSSReset />
-        <Routes />
-      </ThemeProvider>
-    </CookiesProvider>
+    <ThemeProvider
+      theme={customTheme}
+    >
+      <CSSReset />
+      <Routes />
+    </ThemeProvider>
   );
 }
 

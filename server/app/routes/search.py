@@ -1,9 +1,10 @@
 import os
 import json
+import math
 
 import twint
 import asyncio
-import geopy
+from geopy.distance import distance
 
 from queue import Queue
 from threading import Thread
@@ -42,11 +43,17 @@ def launch_query(q, text):
     c.Hide_output = True
     c.Show_hashtags = False
     c.Lang = 'es'
+    northeastBound = (city['geometry']['bounds']['northeast']['lat'],city['geometry']['bounds']['northeast']['lng'])
+    southwestBound = (city['geometry']['bounds']['southwest']['lat'],city['geometry']['bounds']['southwest']['lng'])
+    latCenter, lngCenter = midpoint(northeastBound[0],southwestBound[0],northeastBound[1],southwestBound[1])
+    radius = ((math.sin(45)*(distance(northeastBound,southwestBound).km / 2)))/math.sin(45)
     # TODO: Fit radio based on city boundaries
-    geo = "{},{},8km".format(
-      city['geometry']['location']['lat'],
-      city['geometry']['location']['lng']
+    geo = "{},{},{}km".format(
+      latCenter,
+      lngCenter,
+      radius
     )
+    print(geo)
     c.Geo = geo
 
     def callback(args):
@@ -93,3 +100,19 @@ def search(message):
     socketio.emit('tweets', { 'status': 'finished' })
   else:
     socketio.emit('tweets', { 'status': 'Wait for task in process' })
+
+
+def midpoint(x1, y1, x2, y2):
+    lat1 = math.radians(x1)
+    lon1 = math.radians(x2)
+    lat2 = math.radians(y1)
+    lon2 = math.radians(y2)
+
+    bx = math.cos(lat2) * math.cos(lon2 - lon1)
+    by = math.cos(lat2) * math.sin(lon2 - lon1)
+    lat3 = math.atan2(math.sin(lat1) + math.sin(lat2), \
+           math.sqrt((math.cos(lat1) + bx) * (math.cos(lat1) \
+           + bx) + by**2))
+    lon3 = lon1 + math.atan2(by, math.cos(lat1) + bx)
+
+    return [round(math.degrees(lat3), 2), round(math.degrees(lon3), 2)]

@@ -13,7 +13,7 @@
       while (table.rows.length > 1) {
         table.deleteRow(table.rows.length - 1);
       }
-      socket.emit('search', JSON.stringify({ text: document.getElementById('text').value }));
+      socket.emit('search', JSON.stringify({ query: document.getElementById('text').value }));
     }
 
     let resultsCounter = 0;

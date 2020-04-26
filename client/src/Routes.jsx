@@ -14,7 +14,7 @@ import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
 
 import Login from './pages/Login/Login';
-import Dashboard from './pages/Dashboard/Dashboard';
+import Home from './pages/Home/Home';
 
 const USER_COOKIE_NAME = 'session-user';
 
@@ -37,8 +37,8 @@ function Routes() {
     },
     {
       isPublic: false,
-      path: '/dashboard',
-      children: <Dashboard logout={logout} />,
+      path: '/home',
+      children: <Home logout={logout} />,
     },
   ];
 

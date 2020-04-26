@@ -28,13 +28,13 @@ search_bp = Blueprint('search_bp', __name__,
                       template_folder='templates',
                       static_folder='static')
 
-def launch_query(q, text):
+def launch_query(q, query):
   while True:
     city = q.get()
     print(city['formatted_address'], flush=True)
 
     c = twint.Config()
-    c.Search = text
+    c.Search = query
     c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
     c.Limit = 1
     c.Filter_retweets = True
@@ -76,8 +76,8 @@ def launch_query(q, text):
 @socketio.on('search')
 def search(message):
   data = json.loads(message)
-  text = data['text']
-  session['text'] = text
+  query = data['query']
+  session['query'] = query
 
   if 'task_in_process' not in session:
     session['task_in_process'] = False
@@ -89,7 +89,7 @@ def search(message):
     socketio.emit('tweets', { 'status': 'started' })
 
     for _ in range(num_threads):
-      Thread(target=launch_query, args=(q, text), daemon=True).start()
+      Thread(target=launch_query, args=(q, query), daemon=True).start()
 
     for city in cities:
       q.put(city)

@@ -1,9 +1,10 @@
 Flask
 Flask-Session
+flask-cors
+flask-socketio
 requests
 redis
 twint
 asyncio
-flask-socketio
 eventlet
 geopy

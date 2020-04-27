@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import csv
@@ -10,16 +11,18 @@ if __name__ == '__main__':
 
   labels = []
   tweets = []
-  dataset_path = "{}_dataset.csv".format(date)
-  
-  output = open("{}_output".format(date), 'r')
+  dataset_path = os.path.join(os.getcwd(), 'model', 'data', "{}_dataset.csv".format(date))
+
+  output_path = os.path.join(os.getcwd(), 'model', 'data', "{}_output".format(date))
+  output = open(output_path, 'r')
   for line in output.readlines():
     data = json.loads(line)
     labels.append((data['Line'] + 1, data['Sentiment']))
 
   labels.sort(key=lambda tup: tup[0])
 
-  tweets_input = open("{}_tweets_parsed.txt".format(date), 'r')
+  tweets_path = os.path.join(os.getcwd(), 'model', 'data', "{}_tweets_parsed.txt".format(date))
+  tweets_input = open(tweets_path, 'r')
   for line in tweets_input.readlines():
     tweets.append(line.strip())
 

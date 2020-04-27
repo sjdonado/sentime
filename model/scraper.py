@@ -1,3 +1,4 @@
+import os
 import json
 import math
 from datetime import date
@@ -6,7 +7,7 @@ from datetime import date
 import twint
 from geopy.distance import distance
 
-with open('../server/app/static/data/colombia_departments_capitals_locations.json') as f:
+with open(os.path.join(os.getcwd(), 'server/app/static/data/colombia_departments_capitals_locations.json')) as f:
   cities = json.load(f)
 
 def midpoint(x1, y1, x2, y2):
@@ -25,6 +26,7 @@ def midpoint(x1, y1, x2, y2):
   return [round(math.degrees(lat3), 2), round(math.degrees(lon3), 2)]
 
 if __name__ == '__main__':
+  output_path = os.path.join(os.getcwd(), 'model', 'data', "{}_tweets.csv".format(date.today().strftime('%Y_%m_%d')))
   # num_days = 30
   for idx, city in enumerate(cities):
     c = twint.Config()
@@ -48,7 +50,9 @@ if __name__ == '__main__':
     )
     c.Geo = geo
     c.Store_csv = True
-    c.Output = "{}_tweets.csv".format(date.today().strftime('%Y_%m_%d'))
+    c.Output = output_path
 
     twint.run.Search(c)
     print("{} - {}/32 - DONE!".format(city['formatted_address'], idx + 1), flush=True)
+
+  print("{} saved successfully".format(output_path))

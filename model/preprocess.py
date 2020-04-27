@@ -1,3 +1,4 @@
+import os
 import sys
 import re
 import string
@@ -12,7 +13,10 @@ def remove_mentions_urls(text):
   return tweet_out
 
 def remove_non_alphanumeric(text):
-  text_out = "".join([char for char in text if char not in string.punctuation and (char != '\n' and char != '\r')])
+  # Remove puntuation
+  text = re.sub(r'[^a-zA-z0-9\s]', '', text.lower())
+  # Remove breaklines
+  text_out = "".join([char for char in text if char != '\n' and char != '\r'])
   return text_out
 
 if __name__ == '__main__':
@@ -21,11 +25,12 @@ if __name__ == '__main__':
     print("Error: date arg is required")
     exit(1)
     
-  tweets = pd.read_csv("{}_tweets.csv".format(date), encoding='UTF-8')
+  tweets_path = os.path.join(os.getcwd(), 'model', 'data', "{}_tweets.csv".format(date))
+  tweets = pd.read_csv(tweets_path, encoding='UTF-8')
 
   tweets['tweet_noment_nourl'] = tweets['tweet'].apply(lambda x: remove_mentions_urls(x))
   tweets['tweet_parsed'] = tweets['tweet_noment_nourl'].apply(lambda x: remove_non_alphanumeric(x))
 
-  output_path = "{}_tweets_parsed.txt".format(date)
+  output_path = os.path.join(os.getcwd(), 'model', 'data', "{}_tweets_parsed.txt".format(date))
   tweets['tweet_parsed'].to_csv(output_path, header=None, index=None, sep='\n', quoting=csv.QUOTE_NONE)
   print("{} saved successfully".format(output_path))

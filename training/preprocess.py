@@ -18,7 +18,7 @@ def remove_non_alphanumeric(text):
 if __name__ == '__main__':
   date = sys.argv[1]
   if date is None:
-    print("Error date arg is required")
+    print("Error: date arg is required")
     exit(1)
     
   tweets = pd.read_csv("{}_tweets.csv".format(date), encoding='UTF-8')

@@ -10,20 +10,22 @@
   npm start
 ```
 
-## Model training
-1. Run training/scraper.py
+## Model preprocessing
+1. Run model/scraper.py
   ```bash
     # Example
-    python3 training/scraper.py
+    python3 model/scraper.py
   ```
-2. Run training/preprocess.py ${TODAY_DATE}
+2. Run model/preprocess.py ${TODAY_DATE}
   ```bash
     # Example
-    python3 training/preprocess.py 2020_04_26
+    python3 model/preprocess.py 2020_04_26
   ```
-3. Download AWS Comprehend output and rename as ${TODAY_DATE}_output.json 
-4. Run training/merge_results.py ${TODAY_DATE}
+3. Download AWS Comprehend output and rename as ${TODAY_DATE}_output.json, then move it to model/data
+4. Run model/merge_results.py ${TODAY_DATE}
   ```bash
     # Example
-    python3 training/merge_results.py 2020_04_26
+    python3 model/merge_results.py 2020_04_26
   ```
+5. Create a folder called Sentime in Google Drive and open sentime.ipynb in Colab
+6. Move the generated data/${TODAY_DATE}_dataset.csv to the folder created above

@@ -2,10 +2,12 @@
 
 ## How to run?
 * Server
+Go to server folder and run:
 ```
   docker-compose up
 ```
 * Client
+Go to client folder and run:
 ```
   npm start
 ```
@@ -28,4 +30,4 @@
     python3 model/merge_results.py 2020_04_26
   ```
 5. Create a folder called Sentime in Google Drive and open sentime.ipynb in Colab
-6. Move the generated data/${TODAY_DATE}_dataset.csv to the folder created above
+6. Upload the generated model/data/${TODAY_DATE}_dataset.csv to the folder created above

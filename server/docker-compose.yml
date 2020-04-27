@@ -32,6 +32,8 @@ services:
       POSTGRES_PASSWORD: root_12345
     volumes:
       - postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
 volumes:
   redis-data: ~

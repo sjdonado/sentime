@@ -30,7 +30,7 @@ if __name__ == '__main__':
     c = twint.Config()
     # c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
     c.Popular_tweets = True
-    c.Limit = 1000
+    c.Limit = 1500
     c.Filter_retweets = True
     c.Store_object = True
     c.Location = True
@@ -47,7 +47,8 @@ if __name__ == '__main__':
       radius
     )
     c.Geo = geo
-    c.Output = "{}_tweets.txt".format(date.today().strftime('%Y_%m_%d'))
+    c.Store_csv = True
+    c.Output = "{}_tweets.csv".format(date.today().strftime('%Y_%m_%d'))
 
     twint.run.Search(c)
     print("{} - {}/32 - DONE!".format(city['formatted_address'], idx + 1), flush=True)

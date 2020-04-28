@@ -1,5 +1,8 @@
 # Sentime
 
+## Last Dataset
+2020_04_27_dataset.csv: 30.633 tweets
+
 ## How to run?
 * Server
 Go to server folder and run:

@@ -17,7 +17,8 @@ if __name__ == '__main__':
   output = open(output_path, 'r')
   for line in output.readlines():
     data = json.loads(line)
-    labels.append((data['Line'] + 1, data['Sentiment']))
+    if data['Line']:
+      labels.append((data['Line'] + 1, data['Sentiment']))
 
   labels.sort(key=lambda tup: tup[0])
 

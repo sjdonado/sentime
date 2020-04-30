@@ -1,13 +1,13 @@
 FROM tensorflow/tensorflow:2.1.0-py3 as builder
 
 RUN pip3 install --upgrade --no-cache \
-  setuptools click numpy pandas pathlib seaborn sklearn
+  setuptools click numpy pandas pathlib seaborn sklearn keras
 
 FROM builder
 
 WORKDIR /usr/src
 
-RUN pip3 install wheel
+# RUN pip3 install wheel
 RUN pip3 install gunicorn
 
 COPY ./requirements.txt .

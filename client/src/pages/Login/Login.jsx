@@ -77,7 +77,7 @@ function Login({ setUserEmail }) {
         variant="outline"
         onClick={handleSubmit}
       >
-        Ingesar
+        Ingresar
       </Button>
     </div>
   );

@@ -18,6 +18,7 @@ import Appbar from './components/Appbar';
 
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
+import Landing from './pages/Landing/Landing';
 
 const USER_COOKIE_NAME = 'session-user';
 
@@ -33,6 +34,12 @@ function Routes() {
   };
 
   const routes = [
+    {
+      isPublic: true,
+      exact: true,
+      path: '/',
+      children: <Landing />,
+    },
     {
       isPublic: true,
       path: '/login',
@@ -53,8 +60,10 @@ function Routes() {
   return (
     <Router>
       <Switch>
-        {routes.map(({ isPublic, path, children }) => (
-          <Route key={path} path={path}>
+        {routes.map(({
+          isPublic, path, children, exact,
+        }) => (
+          <Route key={path} path={path} exact={exact}>
             {isPublic ? (
               <PublicRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
                 {children}
@@ -66,7 +75,7 @@ function Routes() {
             )}
           </Route>
         ))}
-        <Redirect to="/login" />
+        <Redirect to="/" />
       </Switch>
     </Router>
   );

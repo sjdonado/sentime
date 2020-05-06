@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_session import Session
 from flask_socketio import SocketIO, emit
+#from flask_sqlalchemy import SQLAlchemy
 import eventlet
 
 from config import Config
@@ -22,6 +23,9 @@ socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 def create_app():
   app.config.from_object(Config)
 
+  #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  #db = SQLAlchemy(app)
+  
   sess.init_app(app)
 
   CORS(app, resources={r"/api/*": { "origins": "*" } }, supports_credentials=True)

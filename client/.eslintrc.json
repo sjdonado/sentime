@@ -22,5 +22,6 @@
         "react"
     ],
     "rules": {
+        "linebreak-style": 0
     }
 }

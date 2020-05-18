@@ -10,3 +10,6 @@ class Config:
   # Flask-Session
   SESSION_TYPE = 'redis'
   SESSION_REDIS = redis.from_url(environ.get('REDIS_URL'))
+
+  # Database Config
+  #SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')

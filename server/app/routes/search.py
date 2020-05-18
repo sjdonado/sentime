@@ -37,7 +37,7 @@ def launch_query(q, query):
     c = twint.Config()
     c.Search = query
     c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
-    c.Limit = 1
+    c.Limit = 120
     c.Filter_retweets = True
     c.Store_object = True
     c.Location = True

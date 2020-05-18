@@ -2,12 +2,16 @@ Flask
 Flask-Session
 flask-cors
 flask-socketio
+flask_sqlalchemy
+flask_script
+flask_migrate
 requests
 redis
 twint
 asyncio
 eventlet
 geopy
+psycopg2-binary
 numpy
 pandas
 pathlib

@@ -18,24 +18,28 @@ Go to client folder and run:
 ```
 
 ## Model preprocessing
-1. Run model/scraper.py
+1. Setup
+  - Install virtualenv `pip install virtualenv`
+  - Create new virtual env `virtualenv .` and activate it `source bin/activate`
+  - Install dependencies `pip install emoji`
+2. Run model/scraper.py
   ```bash
     # Example
     python3 model/scraper.py
   ```
-2. Run model/preprocess.py ${TODAY_DATE}
+3. Run model/preprocess.py ${TODAY_DATE}
   ```bash
     # Example
-    python3 model/preprocess.py 2020_04_26
+    python3 model/preprocess.py 2020_04_27
   ```
-3. Download AWS Comprehend output and rename as ${TODAY_DATE}_output.json, then move it to model/data
-4. Run model/merge_results.py ${TODAY_DATE}
+4. Send tweets_parsed to AWS Comprehend, download the output and rename it as `aws_output`, finally move it to model/data/${TODAY_DATE} folder
+5. Run model/generate_dataset.py ${TODAY_DATE}
   ```bash
     # Example
-    python3 model/merge_results.py 2020_04_26
+    python3 model/generate_dataset.py 2020_04_27
   ```
-5. Create a folder called Sentime in Google Drive and open sentime.ipynb in Colab
-6. Upload the generated model/data/${TODAY_DATE}_dataset.csv to the folder created above
+6. Create a folder called Sentime in Google Drive and open sentime.ipynb in Colab
+7. Upload the generated datasets to `sentime/${TODAY_DATE}/train/data.csv` and `sentime/${TODAY_DATE}/test/data.csv`
 
 ## Connect with database using pgAdmin
 1. Go to http://localhost:5431

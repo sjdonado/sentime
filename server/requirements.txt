@@ -12,3 +12,12 @@ asyncio
 eventlet
 geopy
 psycopg2-binary
+numpy
+pandas
+pathlib
+seaborn
+sklearn
+keras
+emoji
+spacy
+cytoolz

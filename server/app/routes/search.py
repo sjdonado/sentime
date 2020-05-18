@@ -15,6 +15,7 @@ from datetime import timedelta
 from flask import session, Blueprint
 
 from .. import socketio, app
+from ..services import sentiment_classifier
 
 num_threads = 5
 num_days = 1
@@ -43,31 +44,23 @@ def launch_query(q, query):
     c.Hide_output = True
     c.Show_hashtags = False
     c.Lang = 'es'
-    northeastBound = (city['geometry']['bounds']['northeast']['lat'],city['geometry']['bounds']['northeast']['lng'])
-    southwestBound = (city['geometry']['bounds']['southwest']['lat'],city['geometry']['bounds']['southwest']['lng'])
-    latCenter, lngCenter = midpoint(northeastBound[0],southwestBound[0],northeastBound[1],southwestBound[1])
-    radius = ((math.sin(45)*(distance(northeastBound,southwestBound).km / 2)))/math.sin(45)
-    # TODO: Fit radio based on city boundaries
-    geo = "{},{},{}km".format(
-      latCenter,
-      lngCenter,
-      radius
-    )
-    print(geo)
+    c.Pandas = True
+    geo =  get_geo(city)
     c.Geo = geo
 
     def callback(args):
       total_tweets = [t.__dict__ for t in twint.output.tweets_list]
       tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
       tweets = list(map(lambda t: t['tweet'], tweets))
+      scores = sentiment_classifier.get_scores(tweets)
       socketio.emit('tweets', {
         'status': 'processing',
         'data': {
           'city': city,
-          'tweets': tweets
+          'tweets': tweets,
+          'scores': scores
         }
       })
-
       print("{} DONE!".format(city['formatted_address']), flush=True)
       q.task_done()
 
@@ -101,8 +94,8 @@ def search(message):
   else:
     socketio.emit('tweets', { 'status': 'Wait for task in process' })
 
-
-def midpoint(x1, y1, x2, y2):
+def get_geo(city):
+  def midpoint(x1, y1, x2, y2):
     lat1 = math.radians(x1)
     lon1 = math.radians(x2)
     lat2 = math.radians(y1)
@@ -111,8 +104,20 @@ def midpoint(x1, y1, x2, y2):
     bx = math.cos(lat2) * math.cos(lon2 - lon1)
     by = math.cos(lat2) * math.sin(lon2 - lon1)
     lat3 = math.atan2(math.sin(lat1) + math.sin(lat2), \
-           math.sqrt((math.cos(lat1) + bx) * (math.cos(lat1) \
-           + bx) + by**2))
+            math.sqrt((math.cos(lat1) + bx) * (math.cos(lat1) \
+            + bx) + by**2))
     lon3 = lon1 + math.atan2(by, math.cos(lat1) + bx)
 
     return [round(math.degrees(lat3), 2), round(math.degrees(lon3), 2)]
+
+  northeastBound = (city['geometry']['bounds']['northeast']['lat'],city['geometry']['bounds']['northeast']['lng'])
+  southwestBound = (city['geometry']['bounds']['southwest']['lat'],city['geometry']['bounds']['southwest']['lng'])
+  latCenter, lngCenter = midpoint(northeastBound[0],southwestBound[0],northeastBound[1],southwestBound[1])
+  radius = ((math.sin(45)*(distance(northeastBound,southwestBound).km / 2)))/math.sin(45)
+
+  geo = "{},{},{}km".format(
+    latCenter,
+    lngCenter,
+    radius
+  )
+  return geo

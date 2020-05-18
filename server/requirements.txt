@@ -8,3 +8,12 @@ twint
 asyncio
 eventlet
 geopy
+numpy
+pandas
+pathlib
+seaborn
+sklearn
+keras
+emoji
+spacy
+cytoolz

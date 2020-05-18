@@ -10,12 +10,12 @@ if __name__ == '__main__':
     print("Error: date arg is required")
     exit(1)
     
-  tweets_path = os.path.join(os.getcwd(), 'model', 'data', date, "tweets.csv")
+  tweets_path = os.path.join(os.getcwd(), 'data', date, "tweets.csv")
 
   tweets = pd.read_csv(tweets_path, encoding='UTF-8')
   tweets = pd.DataFrame([clean_tweet(tweet) for tweet in tweets])
   tweets = tweets[tweets != '']
 
-  output_path = os.path.join(os.getcwd(), 'model', 'data', date, "tweets_parsed.txt")
+  output_path = os.path.join(os.getcwd(), 'data', date, "tweets_parsed.txt")
   tweets.to_csv(output_path, header=None, index=None, sep='\n', quoting=csv.QUOTE_NONE)
   print("{} saved successfully".format(output_path))

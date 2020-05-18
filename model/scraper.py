@@ -26,7 +26,7 @@ def midpoint(x1, y1, x2, y2):
   return [round(math.degrees(lat3), 2), round(math.degrees(lon3), 2)]
 
 if __name__ == '__main__':
-  data_folder = os.path.join(os.getcwd(), 'model', 'data', date.today().strftime('%Y_%m_%d'))
+  data_folder = os.path.join(os.getcwd(), 'data', date.today().strftime('%Y_%m_%d'))
   if not os.path.exists(data_folder):
     os.makedirs(data_folder)
   output_path = os.path.join(data_folder, "tweets.csv")

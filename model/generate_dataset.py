@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
   labels = []
   tweets = []
-  dataset_path = os.path.join(os.getcwd(), 'model', 'data', date)
+  dataset_path = os.path.join(os.getcwd(), 'data', date)
 
   output_path = os.path.join(dataset_path, "aws_output")
   output = open(output_path, 'r')

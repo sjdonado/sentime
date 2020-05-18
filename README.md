@@ -18,6 +18,7 @@ Go to client folder and run:
 ```
 
 ## Model preprocessing
+Go to model folder and follow the next steps:
 1. Setup
   - Install virtualenv `pip install virtualenv`
   - Create new virtual env `virtualenv .` and activate it `source bin/activate`

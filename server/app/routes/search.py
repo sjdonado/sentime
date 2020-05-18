@@ -15,7 +15,7 @@ from datetime import timedelta
 from flask import session, Blueprint
 
 from .. import socketio, app
-from ..services import forecast
+from ..services import sentiment_classifier
 
 num_threads = 5
 num_days = 1
@@ -52,16 +52,15 @@ def launch_query(q, query):
       total_tweets = [t.__dict__ for t in twint.output.tweets_list]
       tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
       tweets = list(map(lambda t: t['tweet'], tweets))
-      score = forecast.get_score(tweets)
+      scores = sentiment_classifier.get_scores(tweets)
       socketio.emit('tweets', {
         'status': 'processing',
         'data': {
           'city': city,
           'tweets': tweets,
-          'score': score
+          'scores': scores
         }
       })
-
       print("{} DONE!".format(city['formatted_address']), flush=True)
       q.task_done()
 

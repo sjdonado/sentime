@@ -12,3 +12,4 @@ asyncio
 eventlet
 geopy
 psycopg2-binary
+Werkzeug

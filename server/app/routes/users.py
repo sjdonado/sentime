@@ -2,6 +2,7 @@ import json
 from flask_cors import cross_origin
 from flask import Blueprint, request, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import app, db
 from ..models import User
@@ -21,7 +22,7 @@ def login():
 
   user = User.query.filter_by(email=content['email']).first()
   if user:
-    if content['email'] != user.email or content['password'] != user.password:
+    if (content['email'] != user.email) or (not check_password_hash(user.password, content['password'])):
       return jsonify({ 'error': 'Usuario o contraseña incorrectas' }), 404
     else:
       #session['user'] = user.id
@@ -55,7 +56,7 @@ def register():
       company = content['company']
 
       user = User(email=email)
-      user.password = password
+      user.password = generate_password_hash(password)
       user.company = company
       
       db.session.add(user)

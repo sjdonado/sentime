@@ -13,3 +13,12 @@ eventlet
 geopy
 psycopg2-binary
 Werkzeug
+numpy
+pandas
+pathlib
+seaborn
+sklearn
+keras
+emoji
+spacy
+cytoolz

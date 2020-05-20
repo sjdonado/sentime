@@ -22,9 +22,9 @@ import styles from './Home.module.scss';
 import { API_URL, GOOGLE_MAPS_API_KEY } from '../../environment';
 
 const Map = withScriptjs(withGoogleMap(({ results }) => {
-  const data = results.map(({ lat, lng, tweets }) => ({
+  const data = results.map(({ lat, lng, scores }) => ({
     location: new window.google.maps.LatLng(lat, lng),
-    weight: tweets.length,
+    weight: scores,
   }));
   return (
     <GoogleMap
@@ -59,8 +59,8 @@ function Home({ userEmail, logout }) {
 
   const handleOnTweets = ({ status, data }) => {
     if (status === 'processing') {
-      const { city, tweets } = data;
-      // console.log('tweets =>', tweets);
+      const { city, tweets, scores } = data;
+      console.log('tweets =>', tweets, 'scores =>', scores);
       setSearchData({
         status,
         tweetsAcum: searchData.tweetsAcum + tweets.length,
@@ -69,7 +69,7 @@ function Home({ userEmail, logout }) {
             city: city.formatted_address,
             lat: Number(city.geometry.location.lat),
             lng: Number(city.geometry.location.lng),
-            tweets: tweets.length,
+            scores,
           },
           ...searchData.results,
         ],

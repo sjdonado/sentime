@@ -19,6 +19,7 @@ import Appbar from './components/Appbar';
 import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
 import Landing from './pages/Landing/Landing';
+import Register from './pages/Register/Register';
 
 const USER_COOKIE_NAME = 'session-user';
 
@@ -39,6 +40,11 @@ function Routes() {
       exact: true,
       path: '/',
       children: <Landing />,
+    },
+    {
+      isPublic: true,
+      path: '/register',
+      children: <Register />,
     },
     {
       isPublic: true,

@@ -4,7 +4,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_session import Session
 from flask_socketio import SocketIO, emit
-#from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy
 import eventlet
 
 from config import Config
@@ -21,10 +21,13 @@ app = Flask(__name__, instance_relative_config=False)
 
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
 
+db = SQLAlchemy()
+
 def create_app():
   app.config.from_object(Config)
 
-  #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  db.init_app(app)
   #db = SQLAlchemy(app)
   
   sess.init_app(app)

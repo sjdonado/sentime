@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Proptypes from 'prop-types';
+// import Proptypes from 'prop-types';
 
 import {
   Text,
@@ -10,25 +10,25 @@ import {
   useToast,
 } from '@chakra-ui/core';
 
-import styles from './Login.module.scss';
+import styles from './Register.module.scss';
 
-import { login } from '../../services/userService';
+import { register } from '../../services/adminService';
 
-function Login({ setUserEmail }) {
+function Register() {
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    company: '',
   });
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
-      const { email, password } = formData;
-      const { data } = await login(email, password);
-      setUserEmail(data.email);
+      const { email, password, company } = formData;
+      await register(email, password, company);
     } catch ({ message }) {
       toast({
         title: message,
@@ -40,6 +40,7 @@ function Login({ setUserEmail }) {
     }
   };
 
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -49,7 +50,7 @@ function Login({ setUserEmail }) {
 
   return (
     <div className={styles.container}>
-      <Text fontSize="5xl">Login</Text>
+      <Text fontSize="5xl">Registro</Text>
       <FormControl className={styles['form-control']}>
         <FormLabel htmlFor="email">Correo electrónico</FormLabel>
         <Input
@@ -69,6 +70,16 @@ function Login({ setUserEmail }) {
           onChange={handleInputChange}
         />
       </FormControl>
+      <FormControl className={styles['form-control']}>
+        <FormLabel htmlFor="company">Compañía</FormLabel>
+        <Input
+          type="text"
+          name="company"
+          value={formData.company}
+          aria-describedby="company-helper-text"
+          onChange={handleInputChange}
+        />
+      </FormControl>
       <Button
         className={styles['submit-btn']}
         isLoading={isLoading}
@@ -77,14 +88,10 @@ function Login({ setUserEmail }) {
         variant="outline"
         onClick={handleSubmit}
       >
-        Ingresar
+        Registrar
       </Button>
     </div>
   );
 }
 
-Login.propTypes = {
-  setUserEmail: Proptypes.func.isRequired,
-};
-
-export default Login;
+export default Register;

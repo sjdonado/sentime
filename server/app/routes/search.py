@@ -55,8 +55,7 @@ def launch_query(q, query, search_id):
       total_tweets = [t.__dict__ for t in twint.output.tweets_list]
       tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
       tweets = list(map(lambda t: t['tweet'], tweets))
-      #scores = sentiment_classifier.get_scores(tweets)
-      scores = [True] * len(tweets)
+      scores = sentiment_classifier.get_scores(tweets)
       save_results(city['formatted_address'], scores, search_id)
       socketio.emit('tweets', {
         'status': 'processing',

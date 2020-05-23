@@ -13,6 +13,13 @@ import cytoolz
 from .. import app
 
 SPACY_CORE_MODEL = 'es_core_news_md'
+DATA_PATH = pathlib.Path(os.path.join(app.static_folder, 'data'))
+
+with (DATA_PATH / "config.json").open() as file_:
+  model = model_from_json(file_.read())
+
+with (DATA_PATH / "model").open("rb") as file_:
+  lstm_weights = pickle.load(file_)
 
 def get_labelled_sentences(docs, doc_labels):
     labels = []
@@ -39,29 +46,41 @@ def get_features(docs, max_length):
                 break
     return Xs
 
+def clean_tweet(text, remove_emojis=False):
+  # Remove imgs
+  text = re.sub(r'pic.twitter\S+', '', text)
+  # Remove links
+  text = re.sub(r'http\S+', '', text)
+  # Remove mentions and hashtags
+  text = ' '.join(re.sub('(\s?[@#][\w_-]+)|(@[A-Za-z0-9]+)|(#\s?[A-Za-z0-9]+)', ' ', text).split())
+  if remove_emojis:
+    # Remove emojis
+    text = emoji.get_emoji_regexp().sub('', text)
+  # Remove puntuation
+  text = re.sub(r'[\_\-\.\,\;]', ' ', text)
+  text = re.sub(r'[\#\!\?\:\-\=]', '', text)
+  # Remove multiple spaces
+  text = re.sub(r'\s\s+', ' ', text.lower())
+  # Remove breaklines
+  text = ''.join([c for c in text if c != '\n' and c != '\r']).strip()
+
+  return text.lower()
+
 class SentimentAnalyser():
     @staticmethod
     def get_embeddings(vocab):
       return vocab.vectors.data
 
     @classmethod
-    def load(cls, path, nlp, max_length=100):
-      with (path / "config.json").open() as file_:
-          model = model_from_json(file_.read())
-      with (path / "model").open("rb") as file_:
-          lstm_weights = pickle.load(file_)
+    def load(cls, nlp, max_length=100):
       embeddings = cls.get_embeddings(nlp.vocab)
       model.set_weights([embeddings] + lstm_weights)
-
+  
       return cls(model, max_length=max_length)
 
     @classmethod
-    def predict(cls, model_dir, texts, max_length=100):
-      nlp = spacy.load(SPACY_CORE_MODEL)
-      nlp.add_pipe(nlp.create_pipe("sentencizer"))
-      nlp.add_pipe(cls.load(model_dir, nlp, max_length))
+    def predict(cls, nlp, texts):
       docs = nlp.pipe(texts, batch_size=1000)
-
       return [doc.sentiment >= 0.5 for doc in docs]
 
     def __init__(self, model, max_length=100):
@@ -92,27 +111,11 @@ class SentimentAnalyser():
       # For arbitrary data storage, there's:
       # doc.user_data['my_data'] = y
 
-def clean_tweet(text, remove_emojis=False):
-  # Remove imgs
-  text = re.sub(r'pic.twitter\S+', '', text)
-  # Remove links
-  text = re.sub(r'http\S+', '', text)
-  # Remove mentions and hashtags
-  text = ' '.join(re.sub('(\s?[@#][\w_-]+)|(@[A-Za-z0-9]+)|(#\s?[A-Za-z0-9]+)', ' ', text).split())
-  if remove_emojis:
-    # Remove emojis
-    text = emoji.get_emoji_regexp().sub('', text)
-  # Remove puntuation
-  text = re.sub(r'[\_\-\.\,\;]', ' ', text)
-  text = re.sub(r'[\#\!\?\:\-\=]', '', text)
-  # Remove multiple spaces
-  text = re.sub(r'\s\s+', ' ', text.lower())
-  # Remove breaklines
-  text = ''.join([c for c in text if c != '\n' and c != '\r']).strip()
-
-  return text.lower()
+nlp = spacy.load(SPACY_CORE_MODEL)
+nlp.add_pipe(nlp.create_pipe("sentencizer"))
+nlp.add_pipe(SentimentAnalyser.load(nlp))
 
 def get_scores(tweets):
   tweets = [clean_tweet(tweet) for tweet in tweets]
-  scores = SentimentAnalyser.predict(pathlib.Path(os.path.join(app.static_folder, 'data')), tweets)
+  scores = SentimentAnalyser.predict(nlp, tweets)
   return scores

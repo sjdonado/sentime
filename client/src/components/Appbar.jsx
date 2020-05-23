@@ -1,5 +1,6 @@
 import React from 'react';
 import Proptypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import {
   Flex,
@@ -19,6 +20,7 @@ function Appbar({ userEmail, logout }) {
     }
   };
 
+
   return (
     <Flex flexWrap="wrap" justifyContent="space-between" alignItems="center" marginBottom="6">
       <Text fontSize="4xl">Sentime</Text>
@@ -26,6 +28,7 @@ function Appbar({ userEmail, logout }) {
         <Text textAlign="center">
           {userEmail}
         </Text>
+        <Button marginLeft="2" variantColor="teal" as={Link} to="/history">Historial</Button>
         <Button marginLeft="2" variantColor="teal" variant="outline" onClick={handleLogout}>Salir</Button>
       </Flex>
     </Flex>

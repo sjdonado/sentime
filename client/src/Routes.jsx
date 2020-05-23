@@ -20,6 +20,7 @@ import Login from './pages/Login/Login';
 import Home from './pages/Home/Home';
 import Landing from './pages/Landing/Landing';
 import Register from './pages/Register/Register';
+import History from './pages/History/History';
 
 const USER_COOKIE_NAME = 'session-user';
 
@@ -45,6 +46,11 @@ function Routes() {
       isPublic: true,
       path: '/register',
       children: <Register />,
+    },
+    {
+      isPublic: false,
+      path: '/history',
+      children: <History />,
     },
     {
       isPublic: true,

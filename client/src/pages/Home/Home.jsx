@@ -69,6 +69,7 @@ function Home({ userEmail, logout }) {
             city: city.formatted_address,
             lat: Number(city.geometry.location.lat),
             lng: Number(city.geometry.location.lng),
+            tweets: tweets.length,
             scores,
           },
           ...searchData.results,

@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import app, db
-from ..models import User
+from ..models import User, Result, Search
 
 users_bp = Blueprint('users_bp', __name__)
 
@@ -25,8 +25,8 @@ def login():
     if (content['email'] != user.email) or (not check_password_hash(user.password, content['password'])):
       return jsonify({ 'error': 'Usuario o contraseña incorrectas' }), 404
     else:
-      #session['user'] = user.id
-      session['user'] = 1
+      session['user'] = user.id
+      #session['user'] = 1
       return jsonify({ 'email': content['email'] })
   else:
     return jsonify({ 'error': 'Usuario no encontrado' }), 404
@@ -43,6 +43,20 @@ def logout():
   return jsonify({}), 201
 
 
+@users_bp.route('/users/u_history', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def u_history():
+  response = []
+  searches = db.session.query(Search).filter_by(user_id=session['user'])
+  for search in searches:
+    response.append(search.to_JSON())
+    #results = db.session.query(Result).filter(Result.search_id.in_(search.as_scalar()))
+  #print(response, flush=True)
+  print(response, flush=True)
+  return(jsonify(response))
+  
+
+
 @users_bp.route('/users/register', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def register():
@@ -55,7 +69,8 @@ def register():
       password = content['password']
       company = content['company']
 
-      user = User(email=email)
+      user = User()
+      user.email = email
       user.password = generate_password_hash(password)
       user.company = company
       

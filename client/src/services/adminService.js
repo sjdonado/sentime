@@ -10,3 +10,4 @@ export const register = (email, password, company) => axios({
   data: { email, password, company },
   withCredentials: true,
 });
+

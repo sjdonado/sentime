@@ -14,8 +14,11 @@ from datetime import timedelta
 
 from flask import session, Blueprint
 
-from .. import socketio, app
+from flask_sqlalchemy import SQLAlchemy
+
+from .. import socketio, app, db
 from ..services import sentiment_classifier
+from ..models import Search, Result
 
 num_threads = 5
 num_days = 1
@@ -29,7 +32,7 @@ search_bp = Blueprint('search_bp', __name__,
                       template_folder='templates',
                       static_folder='static')
 
-def launch_query(q, query):
+def launch_query(q, query, search_id):
   while True:
     city = q.get()
     print(city['formatted_address'], flush=True)
@@ -52,7 +55,9 @@ def launch_query(q, query):
       total_tweets = [t.__dict__ for t in twint.output.tweets_list]
       tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
       tweets = list(map(lambda t: t['tweet'], tweets))
-      scores = sentiment_classifier.get_scores(tweets)
+      #scores = sentiment_classifier.get_scores(tweets)
+      scores = [True] * len(tweets)
+      save_results(city['formatted_address'], scores, search_id)
       socketio.emit('tweets', {
         'status': 'processing',
         'data': {
@@ -71,6 +76,11 @@ def search(message):
   data = json.loads(message)
   query = data['query']
   session['query'] = query
+  search = Search()
+  search.user_id = session['user']
+  search.query = session['query']
+  db.session.add(search)
+  db.session.commit()
 
   if 'task_in_process' not in session:
     session['task_in_process'] = False
@@ -82,7 +92,7 @@ def search(message):
     socketio.emit('tweets', { 'status': 'started' })
 
     for _ in range(num_threads):
-      Thread(target=launch_query, args=(q, query), daemon=True).start()
+      Thread(target=launch_query, args=(q, query, search.id), daemon=True).start()
 
     for city in cities:
       q.put(city)
@@ -121,3 +131,14 @@ def get_geo(city):
     radius
   )
   return geo
+
+
+def save_results(city, scores, search_id):
+  with app.app_context():
+    result = Result()
+    result.search_id = search_id
+    result.city = city
+    result.pos_score = len([score == True for score in scores])
+    result.neg_score = len(scores) - result.pos_score
+    db.session.add(result)
+    db.session.commit()

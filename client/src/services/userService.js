@@ -18,6 +18,6 @@ export const userLogout = () => axios({
 
 export const getHistory = () => axios({
   method: 'post',
-  url : `${API_URL}/${basePath}/u_history`,
+  url: `${API_URL}/${basePath}/history`,
   withCredentials: true,
-})
+});

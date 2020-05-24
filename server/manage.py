@@ -8,13 +8,11 @@ app = create_app()
 migrate = Migrate(app, db)
 manager = Manager(app)
 
-
 @manager.command
 def create_db():
     os.system('createdb flask_api')
     os.system('createdb test_db')
     print('Databases created')
-
 
 @manager.command
 def drop_db():

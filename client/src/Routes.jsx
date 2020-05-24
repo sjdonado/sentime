@@ -60,12 +60,7 @@ function Routes() {
     {
       isPublic: false,
       path: '/home',
-      children: (
-        <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
-          <Appbar userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />
-          <Home />
-        </Flex>
-      ),
+      children: <Home />,
     },
   ];
 
@@ -82,7 +77,10 @@ function Routes() {
               </PublicRoute>
             ) : (
               <PrivateRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
-                {children}
+                <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
+                  <Appbar userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />
+                  {children}
+                </Flex>
               </PrivateRoute>
             )}
           </Route>

@@ -1,75 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import Proptypes from 'prop-types';
 
 import socketIOClient from 'socket.io-client';
-import { withScriptjs, withGoogleMap, GoogleMap } from 'react-google-maps';
-import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer';
 
 import {
   Flex,
   PseudoBox,
   Button,
   Text,
-  List,
-  ListItem,
-  ListIcon,
-  Progress,
-  Divider,
 } from '@chakra-ui/core';
 
 import styles from './Home.module.scss';
 
-import { API_URL, GOOGLE_MAPS_API_KEY } from '../../environment';
+import { API_URL } from '../../environment';
+import SearchResults from '../../components/SearchResults/SearchResults';
 
-const Map = withScriptjs(withGoogleMap(({ results }) => {
-  const data = results.map(({ lat, lng, scores }) => ({
-    location: new window.google.maps.LatLng(lat, lng),
-    weight: scores,
-  }));
-  return (
-    <GoogleMap
-      defaultZoom={5}
-      defaultCenter={{ lat: 4.1156735, lng: -72.9301367 }}
-    >
-      <HeatmapLayer data={data} radius={20} />
-    </GoogleMap>
-  );
-}));
-
-const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=visualization`;
 const socket = socketIOClient(API_URL);
 
-/**
- * TEST:
-  {
-    tweetsAcum: 3,
-    results: [{
-      city: 'Armenia, Quindio, Colombia',
-      tweets: 3,
-    }],
-  }
-*/
-function Home({ userEmail, logout }) {
+const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
+
+function Home() {
   const [searchData, setSearchData] = useState({
     status: '',
     tweetsAcum: 0,
     results: [],
   });
   const [query, setQuery] = useState('');
+  const [message, setMessage] = useState(DEFAULT_MESSAGE);
 
   const handleOnTweets = ({ status, data }) => {
+    if (status === 'started') {
+      setMessage('Búsqueda aceptada, obteniendo resultados...');
+    }
+    if (status === 'task_in_progress') {
+      setMessage('Tienes una búsqueda en progreso, obteniendo resultados...');
+    }
+    if (status === 'denied') {
+      setMessage('Búsqueda rechazada :(, intenta de nuevo más tarde');
+    }
     if (status === 'processing') {
-      const { city, tweets, scores } = data;
-      console.log('tweets =>', tweets, 'scores =>', scores);
+      const {
+        city,
+        lat,
+        lng,
+        total,
+        scores,
+      } = data;
+      console.log('total tweets =>', total, 'scores =>', scores);
       setSearchData({
         status,
-        tweetsAcum: searchData.tweetsAcum + tweets.length,
         results: [
           {
-            city: city.formatted_address,
-            lat: Number(city.geometry.location.lat),
-            lng: Number(city.geometry.location.lng),
-            tweets: tweets.length,
+            city,
+            lat,
+            lng,
+            total,
             scores,
           },
           ...searchData.results,
@@ -92,6 +76,7 @@ function Home({ userEmail, logout }) {
   const handleSearch = (e) => {
     e.preventDefault();
     socket.emit('search', JSON.stringify({ query }));
+    setMessage('Búsqueda enviada!, esperando aprobación...');
   };
 
   const isProcesing = searchData.status === 'processing';
@@ -135,59 +120,22 @@ function Home({ userEmail, logout }) {
           variantColor="teal"
           size="md"
           marginLeft="3"
-          disabled={isProcesing}
+          disabled={isProcesing || query.length === 0 || message !== DEFAULT_MESSAGE}
         >
           Buscar
         </Button>
       </Flex>
       {(searchData.results.length > 0 || isProcesing) ? (
-        <Flex flexWrap="wrap">
-          <Map
-            results={searchData.results}
-            googleMapURL={googleMapURL}
-            loadingElement={<div className={styles.map} />}
-            containerElement={<div className={styles.map} />}
-            mapElement={<div className={styles.map} />}
-          />
-          <Flex flexDirection="column" flex="3" padding="12px">
-            <Progress
-              color="teal"
-              isAnimated={isProcesing}
-              hasStripe={isProcesing}
-              value={(searchData.results.length / 32) * 100}
-              marginBottom="3"
-            />
-            <Text>{`Estado: ${searchData.status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
-            <Text>{`Departamentos: ${searchData.results.length} de 32`}</Text>
-            <Text>{`Total: ${searchData.tweetsAcum} tweets`}</Text>
-            <Divider />
-            <List spacing={3} height="400px" overflow="scroll">
-              {searchData.results.map(({ city, tweets }) => (
-                <ListItem className={styles.statistic}>
-                  <ListIcon icon="check-circle" color="green.500" />
-                  <Flex justifyContent="space-between" width="100%">
-                    <Text>{city}</Text>
-                    <Text>{`${tweets} tweets`}</Text>
-                  </Flex>
-                </ListItem>
-              ))}
-            </List>
-          </Flex>
-        </Flex>
+        <SearchResults
+          data={searchData.results}
+          isProcesing={isProcesing}
+          status={searchData.status}
+        />
       ) : (
-        <Text marginTop="6" textAlign="center">No tienes búsquedas aún :(</Text>
+        <Text marginTop="6" textAlign="center">{message}</Text>
       )}
     </>
   );
 }
-
-Home.propTypes = {
-  userEmail: Proptypes.string,
-  logout: Proptypes.func.isRequired,
-};
-
-Home.defaultProps = {
-  userEmail: '',
-};
 
 export default Home;

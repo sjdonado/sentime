@@ -42,21 +42,16 @@ def logout():
   session.pop('user')
   return jsonify({}), 201
 
-
-@users_bp.route('/users/u_history', methods=['POST'])
+@users_bp.route('/users/history', methods=['POST'])
 @cross_origin(supports_credentials=True)
-def u_history():
+def history():
   response = []
   searches = db.session.query(Search).filter_by(user_id=session['user'])
   for search in searches:
     response.append(search.to_JSON())
-    #results = db.session.query(Result).filter(Result.search_id.in_(search.as_scalar()))
-  #print(response, flush=True)
-  print(response, flush=True)
+
   return(jsonify(response))
   
-
-
 @users_bp.route('/users/register', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def register():

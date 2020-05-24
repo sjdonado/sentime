@@ -15,12 +15,6 @@ from .. import app
 SPACY_CORE_MODEL = 'es_core_news_md'
 DATA_PATH = pathlib.Path(os.path.join(app.static_folder, 'data'))
 
-with (DATA_PATH / "config.json").open() as file_:
-  model = model_from_json(file_.read())
-
-with (DATA_PATH / "model").open("rb") as file_:
-  lstm_weights = pickle.load(file_)
-
 def get_labelled_sentences(docs, doc_labels):
     labels = []
     sentences = []
@@ -72,7 +66,7 @@ class SentimentAnalyser():
       return vocab.vectors.data
 
     @classmethod
-    def load(cls, nlp, max_length=100):
+    def load(cls, nlp, model, lstm_weights, max_length=100):
       embeddings = cls.get_embeddings(nlp.vocab)
       model.set_weights([embeddings] + lstm_weights)
   
@@ -111,11 +105,22 @@ class SentimentAnalyser():
       # For arbitrary data storage, there's:
       # doc.user_data['my_data'] = y
 
-nlp = spacy.load(SPACY_CORE_MODEL)
-nlp.add_pipe(nlp.create_pipe("sentencizer"))
-nlp.add_pipe(SentimentAnalyser.load(nlp))
+def init_nlp():
+  print('Loading nlp...', flush=True)
+  with (DATA_PATH / "config.json").open() as file_:
+    model = model_from_json(file_.read())
 
-def get_scores(tweets):
+  with (DATA_PATH / "model").open("rb") as file_:
+    lstm_weights = pickle.load(file_)
+
+  nlp = spacy.load(SPACY_CORE_MODEL)
+  nlp.add_pipe(nlp.create_pipe("sentencizer"))
+  nlp.add_pipe(SentimentAnalyser.load(nlp, model, lstm_weights))
+
+  print('nlp loaded!', flush=True)
+  return nlp
+
+def get_scores(nlp, tweets):
   tweets = [clean_tweet(tweet) for tweet in tweets]
   scores = SentimentAnalyser.predict(nlp, tweets)
   return scores

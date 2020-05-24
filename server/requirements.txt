@@ -1,3 +1,5 @@
+setuptools
+click
 Flask
 Flask-Session
 flask-cors

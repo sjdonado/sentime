@@ -32,76 +32,18 @@ search_bp = Blueprint('search_bp', __name__,
                       template_folder='templates',
                       static_folder='static')
 
-def launch_query(q, query, search_id):
-  while True:
-    city = q.get()
-    print(city['formatted_address'], flush=True)
-
-    c = twint.Config()
-    c.Search = query
-    c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
-    c.Limit = 80
-    c.Filter_retweets = True
-    c.Store_object = True
-    c.Location = True
-    c.Hide_output = True
-    c.Show_hashtags = False
-    c.Lang = 'es'
-    c.Pandas = True
-    geo =  get_geo(city)
-    c.Geo = geo
-
-    def callback(args):
-      total_tweets = [t.__dict__ for t in twint.output.tweets_list]
-      tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
-      tweets = list(map(lambda t: t['tweet'], tweets))
-      scores = sentiment_classifier.get_scores(tweets)
-      save_results(city['formatted_address'], scores, search_id)
-      socketio.emit('tweets', {
-        'status': 'processing',
-        'data': {
-          'city': city,
-          'tweets': tweets,
-          'scores': scores
-        }
-      })
-      print("{} DONE!".format(city['formatted_address']), flush=True)
-      q.task_done()
-
-    twint.run.Search(c, callback=callback)
-
-@socketio.on('search')
-def search(message):
-  data = json.loads(message)
-  query = data['query']
-  session['query'] = query
-  search = Search()
-  search.user_id = session['user']
-  search.query = session['query']
-  db.session.add(search)
-  db.session.commit()
-
-  if 'task_in_process' not in session:
-    session['task_in_process'] = False
-
-  if session['task_in_process'] == False:
-    session['task_in_process'] = True
-    q = Queue(maxsize=0)
-
-    socketio.emit('tweets', { 'status': 'started' })
-
-    for _ in range(num_threads):
-      Thread(target=launch_query, args=(q, query, search.id), daemon=True).start()
-
-    for city in cities:
-      q.put(city)
-
-    q.join()
-
-    session['task_in_process'] = False
-    socketio.emit('tweets', { 'status': 'finished' })
-  else:
-    socketio.emit('tweets', { 'status': 'Wait for task in process' })
+def save_results(city, lat, lng, scores, search_id):
+  with app.app_context():
+    result = Result()
+    result.search_id = search_id
+    result.city = city
+    result.lat = lat
+    result.lng = lng
+    result.pos_score = len([score == True for score in scores])
+    result.neg_score = len(scores) - result.pos_score
+    result.total = len(scores)
+    db.session.add(result)
+    db.session.commit()
 
 def get_geo(city):
   def midpoint(x1, y1, x2, y2):
@@ -131,13 +73,84 @@ def get_geo(city):
   )
   return geo
 
+def launch_query(q, nlp, query, search_id):
+  while True:
+    city = q.get()
+    print(city['formatted_address'], flush=True)
 
-def save_results(city, scores, search_id):
-  with app.app_context():
-    result = Result()
-    result.search_id = search_id
-    result.city = city
-    result.pos_score = len([score == True for score in scores])
-    result.neg_score = len(scores) - result.pos_score
-    db.session.add(result)
+    c = twint.Config()
+    c.Search = query
+    c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
+    c.Limit = 80
+    c.Filter_retweets = True
+    c.Store_object = True
+    c.Location = True
+    c.Hide_output = True
+    c.Show_hashtags = False
+    c.Lang = 'es'
+    c.Pandas = True
+    geo =  get_geo(city)
+    c.Geo = geo
+
+    def callback(args):
+      total_tweets = [t.__dict__ for t in twint.output.tweets_list]
+      tweets = list(filter(lambda t: t['geo'] == geo, total_tweets))
+      tweets = list(map(lambda t: t['tweet'], tweets))
+      scores = sentiment_classifier.get_scores(nlp, tweets)
+
+      city_name = city['formatted_address']
+      lat = city['geometry']['location']['lat']
+      lng = city['geometry']['location']['lng']
+
+      save_results(city_name, lat, lng, scores, search_id)
+      socketio.emit('tweets', {
+        'status': 'processing',
+        'data': {
+          'city': city_name,
+          'lat': lat,
+          'lng': lng,
+          'total': len(tweets),
+          'scores': scores
+        }
+      })
+      print("{} DONE!".format(city_name), flush=True)
+
+      q.task_done()
+
+    twint.run.Search(c, callback=callback)
+
+@socketio.on('search')
+def search(message):
+  data = json.loads(message)
+  query = data['query']
+  session['query'] = query
+
+  if 'task_in_process' not in session:
+    session['task_in_process'] = False
+
+  if session['task_in_process'] == False:
+    session['task_in_process'] = True
+    q = Queue(maxsize=0)
+
+    socketio.emit('tweets', { 'status': 'started' })
+
+    search = Search()
+    search.user_id = session['user']
+    search.query = session['query']
+    db.session.add(search)
     db.session.commit()
+
+    nlp = sentiment_classifier.init_nlp()
+
+    for _ in range(num_threads):
+      Thread(target=launch_query, args=(q, nlp, query, search.id), daemon=True).start()
+
+    for city in cities:
+      q.put(city)
+
+    q.join()
+
+    session['task_in_process'] = False
+    socketio.emit('tweets', { 'status': 'finished' })
+  else:
+    socketio.emit('tweets', { 'status': 'task_in_progress' })

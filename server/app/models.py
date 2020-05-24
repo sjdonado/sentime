@@ -5,10 +5,8 @@ from . import db, create_app
 from flask import current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 class User(db.Model):
     __tablename__ = 'users'
-
     # Define the columns of the users table, starting with the primary key
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String, nullable=False, unique=True)
@@ -26,7 +24,6 @@ class User(db.Model):
 
 class Search(db.Model):
     __tablename__ = 'searches'
-
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     search = db.relationship(User)
@@ -36,7 +33,7 @@ class Search(db.Model):
 
     def to_JSON(self):
         res = {}
-        for attr in ('id','user_id','query'):
+        for attr in ('id', 'user_id', 'query', 'created_at', 'updated_at'):
             res[attr] = getattr(self, attr)
         res['results'] = self.get_results()
         return res
@@ -51,11 +48,13 @@ class Search(db.Model):
 
 class Result(db.Model):
     __tablename__ = 'results'
-
     id = db.Column(db.Integer, primary_key=True)
     search_id = db.Column(db.Integer, db.ForeignKey('searches.id'), nullable=False)
     search = db.relationship(Search)
     city = db.Column(db.String, nullable=False)
+    lat = db.Column(db.Float, nullable=False)
+    lng = db.Column(db.Float, nullable=False)
+    total = db.Column(db.Integer, nullable=False)
     pos_score = db.Column(db.Integer, nullable=False)
     neg_score = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -63,6 +62,10 @@ class Result(db.Model):
 
     def to_JSON(self):
         res = {}
-        for attr in ('id','city','pos_score','neg_score'):
+        for attr in ('id', 'city', 'lat', 'lng', 'total', 'created_at', 'updated_at'):
             res[attr] = getattr(self, attr)
+        res['scores'] = {
+            'pos_score': getattr(self, 'pos_score'),
+            'neg_score': getattr(self, 'neg_score')
+        }
         return res

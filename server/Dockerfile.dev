@@ -1,7 +1,5 @@
 FROM tensorflow/tensorflow:2.1.0-py3 as builder
 
-RUN pip3 install --upgrade --no-cache setuptools click
-
 FROM builder
 
 WORKDIR /usr/src

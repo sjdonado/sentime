@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from 'react';
 
 import {
-  Flex,
   Text,
-  List,
-  ListItem,
-  ListIcon,
-  Divider,
+  Flex,
+  Button,
 } from '@chakra-ui/core';
 
 import styles from './History.module.scss';
 import { getHistory } from '../../services/userService';
 
+import Table from '../../components/Table';
+import SearchResults from '../../components/SearchResults/SearchResults';
+
+const columns = [
+  {
+    Header: 'Identificador',
+    accessor: 'id',
+  },
+  {
+    Header: 'Texto buscado',
+    accessor: 'query',
+  },
+  {
+    Header: 'Fecha',
+    accessor: 'created_at',
+  },
+];
 
 function History() {
   const [searches, setSearches] = useState([]);
+  const [selectedSearch, setSelectedSearch] = useState();
 
   useEffect(() => {
     async function fetch() {
@@ -31,38 +46,41 @@ function History() {
     fetch();
   }, [searches, setSearches]);
 
+  const handleRowClick = (e) => {
+    let el = e.target;
+    while (!Object.prototype.hasOwnProperty.call(el.dataset, 'rowindex')) el = el.parentNode;
+    setSelectedSearch(searches[el.dataset.rowindex]);
+  };
 
   return (
     <>
-      <List spacing={3} height="400px" overflow="scroll">
-        {searches.map(({ id, query }) => (
-          <ListItem className={styles.statistic}>
-            <ListIcon icon="check" />
-            <Flex justifyContent="space-between" width="100%">
-              <Text>{id}</Text>
-              <Text>{`${query}`}</Text>
+      <Text className={styles.title} fontSize="3xl">Historial de búsqueda</Text>
+      {selectedSearch && (
+        <Flex flexDirection="column">
+          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Flex>
+              <Text fontWeight="bold" marginRight="2">Texto buscado:</Text>
+              <Text>{selectedSearch.query}</Text>
             </Flex>
-          </ListItem>
-        ))}
-      </List>
-      <Text fontSize="6xl">History</Text>
-      <Flex flexDirection="column" flex="3" padding="12px">
-        <Text>Resultados</Text>
-        <Text>Departamentos: 32 de 32</Text>
-        {/* <Text>{`Total: ${searchData.tweetsAcum} tweets`}</Text> */}
-        <Divider />
-        {/* <List spacing={3} height="400px" overflow="scroll">
-          {searchData.results.map(({ city, tweets }) => (
-            <ListItem className={styles.statistic}>
-              <ListIcon icon="check-circle" color="green.500" />
-              <Flex justifyContent="space-between" width="100%">
-                <Text>{city}</Text>
-                <Text>{`${tweets} tweets`}</Text>
-              </Flex>
-            </ListItem>
-          ))}
-        </List> */}
-      </Flex>
+            <Button
+              variantColor="teal"
+              variant="outline"
+              size="sm"
+              marginBottom="3"
+              onClick={() => setSelectedSearch(null)}
+            >
+              Quitar
+            </Button>
+          </Flex>
+          <SearchResults data={selectedSearch.results} />
+        </Flex>
+      ) }
+      <Table
+        className={styles['history-table']}
+        columns={columns}
+        data={searches}
+        onRowClick={handleRowClick}
+      />
     </>
   );
 }

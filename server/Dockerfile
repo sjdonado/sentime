@@ -15,4 +15,4 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=TRUE
 
-CMD gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app --access-logfile=- --error-logfile=- --log-level=INFO
+CMD gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app

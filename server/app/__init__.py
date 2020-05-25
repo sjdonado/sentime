@@ -28,6 +28,10 @@ dictConfig({
 
 logger = logging.getLogger(__name__)
 
+if Config.FLASK_ENV == 'production':
+  logging.basicConfig(filename='server.log',level=logging.INFO)
+  logging.basicConfig(filename='server.log',level=logging.ERROR)
+
 eventlet.monkey_patch()
 
 sess = Session()

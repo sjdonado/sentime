@@ -17,22 +17,30 @@ import PrivateRoute from './components/PrivateRoute';
 import Appbar from './components/Appbar';
 
 import Login from './pages/Login/Login';
-import Home from './pages/Home/Home';
+import Search from './pages/Search/Search';
 import Landing from './pages/Landing/Landing';
 import Register from './pages/Register/Register';
 import History from './pages/History/History';
 
-const USER_COOKIE_NAME = 'session-user';
+const USER_DATA_COOKIE = 'session-user';
 
-function Routes() {
-  const [cookies, setCookie, removeCookie] = useCookies([USER_COOKIE_NAME]);
+  function Routes() {
+  const [cookies, setCookie, removeCookie] = useCookies([USER_DATA_COOKIE]);
 
-  const setUserEmail = (data) => {
-    setCookie(USER_COOKIE_NAME, data, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
+  const setUserData = (id, email) => {
+    setCookie(USER_DATA_COOKIE, `${id},${email}`, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
   };
 
+  const getUserData = () => {
+    const [id, email] = cookies[USER_DATA_COOKIE] ? cookies[USER_DATA_COOKIE].split(',') : ''
+    return {
+      id: Number(id),
+      email
+    }
+  }
+
   const logout = () => {
-    removeCookie(USER_COOKIE_NAME, { path: '/' });
+    removeCookie(USER_DATA_COOKIE, { path: '/' });
   };
 
   const routes = [
@@ -55,12 +63,12 @@ function Routes() {
     {
       isPublic: true,
       path: '/login',
-      children: <Login setUserEmail={setUserEmail} />,
+      children: <Login setUserData={setUserData} />,
     },
     {
       isPublic: false,
-      path: '/home',
-      children: <Home />,
+      path: '/search',
+      children: <Search userData={getUserData()}/>,
     },
   ];
 
@@ -72,13 +80,13 @@ function Routes() {
         }) => (
           <Route key={path} path={path} exact={exact}>
             {isPublic ? (
-              <PublicRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
+              <PublicRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
                 {children}
               </PublicRoute>
             ) : (
-              <PrivateRoute isAuth={Boolean(cookies[USER_COOKIE_NAME])}>
+              <PrivateRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
                 <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
-                  <Appbar userEmail={cookies[USER_COOKIE_NAME]} logout={logout} />
+                  <Appbar userData={getUserData()} logout={logout} />
                   {children}
                 </Flex>
               </PrivateRoute>

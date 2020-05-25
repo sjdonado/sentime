@@ -69,7 +69,7 @@ function History() {
               marginBottom="3"
               onClick={() => setSelectedSearch(null)}
             >
-              Quitar
+              Cerrar
             </Button>
           </Flex>
           <SearchResults data={selectedSearch.results} />

@@ -17,24 +17,15 @@ def login():
   if 'email' not in content or 'password' not in content:
     return jsonify({ 'error': 'Email and password are required' }), 400
 
-  # if content['email'] != 'test@test.com' or content['password'] != '12345678':
-  #   return jsonify({ 'error': 'Usuario no encontrado' }), 404
-
   user = User.query.filter_by(email=content['email']).first()
   if user:
     if (content['email'] != user.email) or (not check_password_hash(user.password, content['password'])):
       return jsonify({ 'error': 'Usuario o contraseña incorrectas' }), 404
     else:
-      session['user'] = user.id
-      #session['user'] = 1
-      return jsonify({ 'email': content['email'] })
+      session['user_id'] = user.id
+      return jsonify(user.to_JSON())
   else:
     return jsonify({ 'error': 'Usuario no encontrado' }), 404
-
-
-  # User id from db
-  #session['user'] = 1
-  #return jsonify({ 'email': content['email'] })
 
 @users_bp.route('/users/logout', methods=['POST'])
 @cross_origin(supports_credentials=True)
@@ -46,7 +37,7 @@ def logout():
 @cross_origin(supports_credentials=True)
 def history():
   response = []
-  searches = db.session.query(Search).filter_by(user_id=session['user'])
+  searches = db.session.query(Search).filter_by(user_id=session['user_id'])
   for search in searches:
     response.append(search.to_JSON())
 

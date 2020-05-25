@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 function PublicRoute({ isAuth, children }) {
   if (isAuth) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/search" />;
   }
   return children;
 }

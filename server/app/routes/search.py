@@ -39,8 +39,9 @@ def save_results(city, lat, lng, scores, search_id):
     result.city = city
     result.lat = lat
     result.lng = lng
-    result.pos_score = len([score == True for score in scores])
-    result.neg_score = len(scores) - result.pos_score
+    result.positive = len([score == 1 for score in scores])
+    result.negative = len([score == -1 for score in scores])
+    result.neutral = len(scores) - (result.positive + result.negative)
     result.total = len(scores)
     db.session.add(result)
     db.session.commit()
@@ -73,7 +74,7 @@ def get_geo(city):
   )
   return geo
 
-def launch_query(q, nlp, query, search_id):
+def launch_query(q, nlp, query, user_id, search_id):
   while True:
     city = q.get()
     print(city['formatted_address'], flush=True)
@@ -104,6 +105,7 @@ def launch_query(q, nlp, query, search_id):
 
       save_results(city_name, lat, lng, scores, search_id)
       socketio.emit('tweets', {
+        'id': user_id, 
         'status': 'processing',
         'data': {
           'city': city_name,
@@ -113,7 +115,6 @@ def launch_query(q, nlp, query, search_id):
           'scores': scores
         }
       })
-      print("{} DONE!".format(city_name), flush=True)
 
       q.task_done()
 
@@ -135,7 +136,7 @@ def search(message):
     socketio.emit('tweets', { 'status': 'started' })
 
     search = Search()
-    search.user_id = session['user']
+    search.user_id = session['user_id']
     search.query = session['query']
     db.session.add(search)
     db.session.commit()
@@ -143,7 +144,7 @@ def search(message):
     nlp = sentiment_classifier.init_nlp()
 
     for _ in range(num_threads):
-      Thread(target=launch_query, args=(q, nlp, query, search.id), daemon=True).start()
+      Thread(target=launch_query, args=(q, nlp, query, session['user_id'], search.id), daemon=True).start()
 
     for city in cities:
       q.put(city)

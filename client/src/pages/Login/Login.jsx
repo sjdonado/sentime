@@ -14,7 +14,7 @@ import styles from './Login.module.scss';
 
 import { login } from '../../services/userService';
 
-function Login({ setUserEmail }) {
+function Login({ setUserData }) {
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ function Login({ setUserEmail }) {
       setIsLoading(true);
       const { email, password } = formData;
       const { data } = await login(email, password);
-      setUserEmail(data.email);
+      setUserData(data.id, data.email);
     } catch ({ message }) {
       toast({
         title: message,
@@ -84,7 +84,7 @@ function Login({ setUserEmail }) {
 }
 
 Login.propTypes = {
-  setUserEmail: Proptypes.func.isRequired,
+  setUserData: Proptypes.func.isRequired,
 };
 
 export default Login;

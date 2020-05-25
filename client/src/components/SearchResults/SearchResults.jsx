@@ -21,7 +21,7 @@ import styles from './SearchResults.module.scss';
 const Map = withScriptjs(withGoogleMap(({ results }) => {
   const data = results.map(({ lat, lng, scores }) => ({
     location: new window.google.maps.LatLng(Number(lat), Number(lng)),
-    weight: scores.pos_score,
+    weight: scores.positive,
   }));
   return (
     <GoogleMap

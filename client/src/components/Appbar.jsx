@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { Link, useLocation } from 'react-router-dom';
 
 import {
@@ -10,8 +10,10 @@ import {
 
 import { userLogout } from '../services/userService';
 
-function Appbar({ userEmail, logout }) {
+function Appbar({ userData, logout }) {
   const location = useLocation();
+
+  console.log(userData)
 
   const handleLogout = async () => {
     try {
@@ -23,7 +25,7 @@ function Appbar({ userEmail, logout }) {
   };
 
   const routes = [
-    { name: 'Búsqueda', path: '/home' },
+    { name: 'Búsqueda', path: '/search' },
     { name: 'Historial', path: '/history' },
   ];
 
@@ -43,7 +45,7 @@ function Appbar({ userEmail, logout }) {
             {name}
           </Button>
         ))}
-        <Text textAlign="center" marginLeft="2">{userEmail}</Text>
+        <Text textAlign="center" marginLeft="2">{userData.email}</Text>
         <Button marginLeft="2" variantColor="pink" variant="outline" onClick={handleLogout}>Salir</Button>
       </Flex>
     </Flex>
@@ -51,12 +53,11 @@ function Appbar({ userEmail, logout }) {
 }
 
 Appbar.propTypes = {
-  userEmail: Proptypes.string,
-  logout: Proptypes.func.isRequired,
-};
-
-Appbar.defaultProps = {
-  userEmail: '',
+  userData: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    email: PropTypes.string.isRequired
+  }).isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
 export default Appbar;

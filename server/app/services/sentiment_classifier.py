@@ -13,6 +13,7 @@ import cytoolz
 from .. import app
 
 SPACY_CORE_MODEL = 'es_core_news_md'
+batch_size = 128
 DATA_PATH = pathlib.Path(os.path.join(app.static_folder, 'data'))
 
 def get_labelled_sentences(docs, doc_labels):
@@ -66,16 +67,15 @@ class SentimentAnalyser():
       return vocab.vectors.data
 
     @classmethod
-    def load(cls, nlp, model, lstm_weights, max_length=100):
+    def load(cls, nlp, model, lstm_weights, max_length=140):
       embeddings = cls.get_embeddings(nlp.vocab)
       model.set_weights([embeddings] + lstm_weights)
-  
       return cls(model, max_length=max_length)
 
     @classmethod
     def predict(cls, nlp, texts):
-      docs = nlp.pipe(texts, batch_size=1000)
-      return [doc.sentiment >= 0.5 for doc in docs]
+      docs = nlp.pipe(texts, batch_size=batch_size)
+      return [doc.sentiment for doc in docs]
 
     def __init__(self, model, max_length=100):
       self._model = model
@@ -86,7 +86,7 @@ class SentimentAnalyser():
       y = self._model.predict(X)
       self.set_sentiment(doc, y)
 
-    def pipe(self, docs, batch_size=1000):
+    def pipe(self, docs, batch_size=batch_size):
       for minibatch in cytoolz.partition_all(batch_size, docs):
           minibatch = list(minibatch)
           sentences = []
@@ -95,15 +95,12 @@ class SentimentAnalyser():
           Xs = get_features(sentences, self.max_length)
           ys = self._model.predict(Xs)
           for sent, label in zip(sentences, ys):
-              sent.doc.sentiment += label - 0.5
+              sent.doc.sentiment += np.argmax(label) - 1
           for doc in minibatch:
               yield doc
 
     def set_sentiment(self, doc, y):
-      doc.sentiment = float(y[0])
-      # Sentiment has a native slot for a single float.
-      # For arbitrary data storage, there's:
-      # doc.user_data['my_data'] = y
+      doc.sentiment = y
 
 def init_nlp():
   print('Loading nlp...', flush=True)

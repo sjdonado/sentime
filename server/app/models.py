@@ -15,6 +15,12 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    def to_JSON(self):
+        res = {}
+        for attr in ('id', 'email', 'company', 'created_at', 'updated_at'):
+            res[attr] = getattr(self, attr)
+        return res
+
     # def set_password(self, password):
     #     self.password = generate_password_hash(password)
 
@@ -55,8 +61,9 @@ class Result(db.Model):
     lat = db.Column(db.Float, nullable=False)
     lng = db.Column(db.Float, nullable=False)
     total = db.Column(db.Integer, nullable=False)
-    pos_score = db.Column(db.Integer, nullable=False)
-    neg_score = db.Column(db.Integer, nullable=False)
+    positive = db.Column(db.Integer, nullable=False)
+    neutral = db.Column(db.Integer, nullable=False)
+    negative = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -65,7 +72,8 @@ class Result(db.Model):
         for attr in ('id', 'city', 'lat', 'lng', 'total', 'created_at', 'updated_at'):
             res[attr] = getattr(self, attr)
         res['scores'] = {
-            'pos_score': getattr(self, 'pos_score'),
-            'neg_score': getattr(self, 'neg_score')
+            'positive': getattr(self, 'positive'),
+            'neutral': getattr(self, 'neutral'),
+            'negative': getattr(self, 'negative'),
         }
         return res

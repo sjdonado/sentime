@@ -21,7 +21,6 @@ from ..services import sentiment_classifier
 from ..models import Search, Result
 
 num_threads = 5
-num_days = 1
 cities_path = os.path.join(app.static_folder, 'data', 'colombia_departments_capitals_locations.json')
 
 with open(cities_path) as f:
@@ -39,10 +38,10 @@ def save_results(city, lat, lng, scores, search_id):
     result.city = city
     result.lat = lat
     result.lng = lng
-    result.positive = len([score == 1 for score in scores])
-    result.negative = len([score == -1 for score in scores])
-    result.neutral = len(scores) - (result.positive + result.negative)
-    result.total = len(scores)
+    result.positive = scores['positive']
+    result.negative = scores['negative']
+    result.neutral = scores['neutral']
+    result.total = scores['positive'] + scores['negative'] + scores['neutral']
     db.session.add(result)
     db.session.commit()
 
@@ -74,14 +73,13 @@ def get_geo(city):
   )
   return geo
 
-def launch_query(q, nlp, query, user_id, search_id):
+def launch_query(idx, q, nlp, query, hours, user_id, search_id):
   while True:
     city = q.get()
-    print(city['formatted_address'], flush=True)
 
     c = twint.Config()
     c.Search = query
-    c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
+    c.Since = (date.today() - timedelta(hours==hours)).strftime('%Y-%m-%d %H:%M:%S')
     c.Limit = 80
     c.Filter_retweets = True
     c.Store_object = True
@@ -116,6 +114,11 @@ def launch_query(q, nlp, query, user_id, search_id):
         }
       })
 
+      if (idx == 32):
+        socketio.emit('tweets', { 'status': 'finished' })
+        with app.app_context():
+          session['task_in_process'] = False
+
       q.task_done()
 
     twint.run.Search(c, callback=callback)
@@ -124,7 +127,7 @@ def launch_query(q, nlp, query, user_id, search_id):
 def search(message):
   data = json.loads(message)
   query = data['query']
-  session['query'] = query
+  hours = data['hours']
 
   if 'task_in_process' not in session:
     session['task_in_process'] = False
@@ -137,21 +140,18 @@ def search(message):
 
     search = Search()
     search.user_id = session['user_id']
-    search.query = session['query']
+    search.query = query
     db.session.add(search)
     db.session.commit()
 
     nlp = sentiment_classifier.init_nlp()
 
-    for _ in range(num_threads):
-      Thread(target=launch_query, args=(q, nlp, query, session['user_id'], search.id), daemon=True).start()
+    for idx in range(num_threads):
+      Thread(target=launch_query, args=(idx, q, nlp, query, hours, session['user_id'], search.id), daemon=True).start()
 
     for city in cities:
       q.put(city)
 
-    q.join()
-
-    session['task_in_process'] = False
-    socketio.emit('tweets', { 'status': 'finished' })
+    q.join()    
   else:
     socketio.emit('tweets', { 'status': 'task_in_progress' })

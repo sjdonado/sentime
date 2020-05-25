@@ -88,16 +88,16 @@ class SentimentAnalyser():
 
     def pipe(self, docs, batch_size=batch_size):
       for minibatch in cytoolz.partition_all(batch_size, docs):
-          minibatch = list(minibatch)
-          sentences = []
-          for doc in minibatch:
-              sentences.extend(doc.sents)
-          Xs = get_features(sentences, self.max_length)
-          ys = self._model.predict(Xs)
-          for sent, label in zip(sentences, ys):
-              sent.doc.sentiment += np.argmax(label) - 1
-          for doc in minibatch:
-              yield doc
+        minibatch = list(minibatch)
+        sentences = []
+        for doc in minibatch:
+          sentences.extend(doc.sents)
+        Xs = get_features(sentences, self.max_length)
+        ys = self._model.predict(Xs)
+        for sent, label in zip(sentences, ys):
+          sent.doc.sentiment += np.argmax(label) - 1
+        for doc in minibatch:
+          yield doc
 
     def set_sentiment(self, doc, y):
       doc.sentiment = y
@@ -120,4 +120,17 @@ def init_nlp():
 def get_scores(nlp, tweets):
   tweets = [clean_tweet(tweet) for tweet in tweets]
   scores = SentimentAnalyser.predict(nlp, tweets)
-  return scores
+
+  positive = 0
+  negative = 0
+  for score in scores:
+    if score == 1:
+      positive += 1
+    if score == -1:
+      positive += 1
+  
+  return {
+    'positive': positive,
+    'negative': negative,
+    'neutral': len(scores) - (positive + negative)
+  }

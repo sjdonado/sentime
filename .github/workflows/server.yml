@@ -9,18 +9,18 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@master
-      - name: Go to server folder
-        run: cd server
       - name: Login to Heroku
         run: heroku container:login 
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       - name: Build and push
+        working-directory: server
         run: heroku container:push -a $APP_NAME web
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           APP_NAME: sentime
       - name: Release
+        working-directory: server
         run: heroku container:release -a $APP_NAME web
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}

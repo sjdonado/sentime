@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/core';
 
-import styles from './Search.module.scss';
+// import styles from './Search.module.scss';
 
 import { API_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
@@ -80,7 +80,7 @@ function Search({ userData }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    socket.emit('search', JSON.stringify({ query }));
+    socket.emit('search', JSON.stringify({ query, hours: 2 }));
     setMessage('Búsqueda enviada!, esperando aprobación...');
   };
 

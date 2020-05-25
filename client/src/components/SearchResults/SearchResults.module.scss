@@ -1,5 +1,5 @@
 .map {
-  flex: 7;
+  flex: 5;
   margin-top: 12px;
   height: 500px;
   max-width: 700;
@@ -8,4 +8,14 @@
 .statistic {
   display: flex;
   align-items: center;
+}
+
+.list-item-container {
+  button {
+    margin: auto 12px;
+  }
+}
+
+.chart {
+  margin-top: 6px !important;
 }

@@ -122,12 +122,12 @@ function Search({ userData }) {
           variantColor="teal"
           size="md"
           marginLeft="3"
-          disabled={isProcesing || query.length === 0 || message !== DEFAULT_MESSAGE}
+          disabled={isProcesing || (query && query.length === 0) || message !== DEFAULT_MESSAGE}
         >
           Buscar
         </Button>
       </Flex>
-      {(searchData.results.length > 0 || isProcesing) ? (
+      {((searchData && searchData.results && searchData.results.length > 0) || isProcesing) ? (
         <SearchResults
           data={searchData.results}
           isProcesing={isProcesing}
@@ -143,7 +143,7 @@ function Search({ userData }) {
 Search.propTypes = {
   userData: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired
+    email: PropTypes.string.isRequired,
   }).isRequired,
 };
 

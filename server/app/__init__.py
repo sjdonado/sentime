@@ -18,9 +18,7 @@ if Config.FLASK_ENV == 'production':
   logging.basicConfig(filename='info.log',level=logging.INFO)
 
 app = Flask(__name__, instance_relative_config=False)
-
 socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")
-
 db = SQLAlchemy()
 
 def create_app():

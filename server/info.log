@@ -143,3 +143,14 @@ INFO:werkzeug:192.168.176.1 - - [26/Jan/2020 21:18:06] "[37mGET / HTTP/1.1[0m"
 INFO:werkzeug: * Detected change in '/usr/src/app/routes/search.py', reloading
 INFO:werkzeug: * Restarting with stat
 INFO:werkzeug:192.168.176.1 - - [26/Jan/2020 21:18:26] "[37mGET / HTTP/1.1[0m" 200 -
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:90f70198dde5429fbd3e3fcb62256eee: Sending packet OPEN data {'sid': '90f70198dde5429fbd3e3fcb62256eee', 'upgrades': ['websocket'], 'pingTimeout': 60000, 'pingInterval': 25000}
+INFO:engineio.server:90f70198dde5429fbd3e3fcb62256eee: Sending packet MESSAGE data 0
+INFO:engineio.server:90f70198dde5429fbd3e3fcb62256eee: Received request to upgrade to websocket
+INFO:engineio.server:90f70198dde5429fbd3e3fcb62256eee: Upgrade to websocket successful
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.

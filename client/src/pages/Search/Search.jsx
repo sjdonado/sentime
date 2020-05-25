@@ -22,7 +22,7 @@ const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 function Search({ userData }) {
   const [searchData, setSearchData] = useState({
     status: '',
-    tweetsAcum: 0,
+    results: [],
   });
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState(DEFAULT_MESSAGE);

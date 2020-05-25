@@ -16,15 +16,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Set project dir environment var
+        run: echo ::set-env name=PROJECT_DIR::"$GITHUB_WORKSPACE/client"
       - name: Install dependencies
         run: npm install
       - name: Build
-        working-directory: client
         run: npm run build
       - name: Deploy to Firebase
-        working-directory: client
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting:prod
+          args: deploy --only hosting:prod -p clien/firebase.json
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

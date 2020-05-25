@@ -12,10 +12,10 @@ import {
 
 // import styles from './Search.module.scss';
 
-import { API_URL } from '../../environment';
+import { SOCKET_IO_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
 
-const socket = socketIOClient(API_URL);
+const socket = socketIOClient(SOCKET_IO_URL);
 
 const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 

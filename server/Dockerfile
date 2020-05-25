@@ -4,8 +4,7 @@ FROM builder
 
 WORKDIR /usr/src
 
-# RUN pip3 install wheel
-# RUN pip3 install gunicorn
+RUN pip3 install gunicorn
 
 COPY ./requirements.txt .
 RUN pip3 install  -r requirements.txt
@@ -14,5 +13,6 @@ RUN python -m spacy download es_core_news_md
 
 COPY . .
 
-# CMD ["gunicorn", "-b 0.0.0.0", "wsgi:app"]
-CMD ["python3", "wsgi.py"]
+ENV PYTHONUNBUFFERED=TRUE
+
+CMD gunicorn --bind 0.0.0.0:$PORT wsgi:app --access-logfile=- --error-logfile=- --log-level=INFO

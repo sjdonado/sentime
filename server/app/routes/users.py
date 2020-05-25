@@ -12,7 +12,6 @@ users_bp = Blueprint('users_bp', __name__)
 @users_bp.route('/users/login', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def login():
-  print(request.args)
   content = request.json
   if 'email' not in content or 'password' not in content:
     return jsonify({ 'error': 'Email and password are required' }), 400
@@ -62,13 +61,11 @@ def register():
       
       db.session.add(user)
       db.session.commit()
-      print('user registered', flush=True)
-      return jsonify({'message':'User registration was succesful','email': user.email})
-    
+
+      return jsonify(user.to_JSON())
     except Exception as e:
-                    response = {
-                        'message': str(e)
-                        }
-                    return response
+      return jsonify({ 'message': str(e) })
+
+  return jsonify({ 'error': 'Este correo ya se encuentra registrado' })
 
 

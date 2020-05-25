@@ -1,9 +1,15 @@
 # Sentime
 
-## Current Dataset
-2020_04_27_dataset.csv: 30.633 tweets:
-- 9.959 Positive
-- 6.123 Negative
+## Datasets
+2020_04_27_dataset.csv: 30633 tweets:
+- 9959 Positive
+- 6123 Negative
+
+2020_05_24_dataset.csv: 53366 tweets:
+  - 19534 Neutral
+  - 17483 Positive
+  - 12376 Negative
+  - 3972 Mixed
 
 ## How to run?
 * Server

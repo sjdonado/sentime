@@ -4,12 +4,13 @@ import json
 import csv
 from cleaner import clean_tweet
 
-def write_dataset(path, tweets, labels):
+def write_dataset(path, tweets):
   with open(path, 'w') as out:
     csv_out = csv.writer(out)
     csv_out.writerow(['tweet', 'sentiment'])
-    for idx, tweet in enumerate(tweets):
-      csv_out.writerow([tweet, labels[idx][1]])
+    for tweet in tweets:
+      if tweet[1] != 'NONE':
+        csv_out.writerow([tweet[0], tweet[1]])
 
   print("Saved {} tweets at {}".format(len(tweets), path))
 
@@ -28,32 +29,24 @@ if __name__ == '__main__':
   tweets = []
   dataset_path = os.path.join(os.getcwd(), 'data', date)
 
+  tweets_path = os.path.join(dataset_path, "tweets_parsed.txt")
+  tweets_input = open(tweets_path, 'r')
+  for line in tweets_input.readlines():
+    tweets.append((clean_tweet(line.strip(), remove_emojis=True), 'NONE'))
+
   output_path = os.path.join(dataset_path, "aws_output")
   output = open(output_path, 'r')
   for line in output.readlines():
     data = json.loads(line)
-    if data['Line']:
-      labels.append((data['Line'] + 1, data['Sentiment']))
-
-  labels.sort(key=lambda tup: tup[0])
-
-  tweets_path = os.path.join(dataset_path, "tweets_parsed.txt")
-  tweets_input = open(tweets_path, 'r')
-  for line in tweets_input.readlines():
-    tweets.append(line.strip())
-
-  # Clean tweets
-  tweets = [clean_tweet(tweet, remove_emojis=True) for tweet in tweets]
+    if 'Line' in data:
+      tweets[data['Line']] = (tweets[data['Line']][0], data['Sentiment'])
 
   # Split dataset
-  limit = round(len(tweets) * 0.7)
+  limit = round(len(tweets) * 0.9)
 
   dataset_path = create_folder(os.path.join(dataset_path, "dataset"))
   train_folder = create_folder(os.path.join(dataset_path, "train"))
   test_folder = create_folder(os.path.join(dataset_path, "test"))
 
-  write_dataset(os.path.join(train_folder, "data.csv"),
-    tweets[:limit], labels[:limit])
-  
-  write_dataset(os.path.join(test_folder, "data.csv"),
-    tweets[limit + 1:], labels[limit + 1:])
+  write_dataset(os.path.join(train_folder, "data.csv"), tweets[:limit-1])
+  write_dataset(os.path.join(test_folder, "data.csv"), tweets[limit:])

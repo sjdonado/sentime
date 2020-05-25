@@ -7,13 +7,13 @@ def clean_tweet(text, remove_emojis=False):
   # Remove links
   text = re.sub(r'http\S+', '', text)
   # Remove mentions and hashtags
-  text = ' '.join(re.sub('(\s?[@#][\w_-]+)|(@[A-Za-z0-9]+)|(#\s?[A-Za-z0-9]+)', ' ', text).split())
+  text = ' '.join(re.sub('(\s?[@#][\w_-]+)', '', text).split())
   if remove_emojis:
     # Remove emojis
     text = emoji.get_emoji_regexp().sub('', text)
   # Remove puntuation
   text = re.sub(r'[\_\-\.\,\;]', ' ', text)
-  text = re.sub(r'[\#\!\?\:\-\=]', '', text)
+  # text = re.sub(r'[\#\!\?\:\-\=]', '', text)
   # Remove multiple spaces
   text = re.sub(r'\s\s+', ' ', text.lower())
   # Remove breaklines

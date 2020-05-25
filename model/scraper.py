@@ -36,7 +36,7 @@ if __name__ == '__main__':
     c = twint.Config()
     # c.Since = (date.today() - timedelta(days=num_days)).strftime('%Y-%m-%d %H:%M:%S')
     c.Popular_tweets = True
-    c.Limit = 1500
+    c.Limit = 3000
     c.Filter_retweets = True
     c.Store_object = True
     c.Location = True

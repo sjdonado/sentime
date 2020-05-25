@@ -13,9 +13,10 @@ if __name__ == '__main__':
   tweets_path = os.path.join(os.getcwd(), 'data', date, "tweets.csv")
 
   tweets = pd.read_csv(tweets_path, encoding='UTF-8')
-  tweets = pd.DataFrame([clean_tweet(tweet) for tweet in tweets])
+  tweets = pd.DataFrame([clean_tweet(tweet) for tweet in tweets['tweet'].to_numpy()])
   tweets = tweets[tweets != '']
 
   output_path = os.path.join(os.getcwd(), 'data', date, "tweets_parsed.txt")
-  tweets.to_csv(output_path, header=None, index=None, sep='\n', quoting=csv.QUOTE_NONE)
+
+  tweets.to_csv(output_path, header=None, index=None, sep='\n')
   print("{} saved successfully".format(output_path))

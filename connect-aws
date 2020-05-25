@@ -1,2 +1,2 @@
 #! /bin/bash
-ssh -i "sentime_key.pem" ubuntu@ec2-3-211-0-43.compute-1.amazonaws.com
+ssh -i "sentime_key.pem" ubuntu@ec2-34-195-102-169.compute-1.amazonaws.com

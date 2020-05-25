@@ -129,31 +129,35 @@ def search(message):
   query = data['query']
   hours = data['hours']
 
-  logger.info('Init search...')
+  logger.info("Search: {}, hours: {}".format(query, hours))
 
-  if 'task_in_process' not in session:
+  try:
+    if 'task_in_process' not in session:
+      session['task_in_process'] = False
+
+    if session['task_in_process'] == False:
+      session['task_in_process'] = True
+      q = Queue(maxsize=0)
+
+      socketio.emit('tweets', { 'status': 'started' })
+
+      search = Search()
+      search.user_id = session['user_id']
+      search.query = query
+      db.session.add(search)
+      db.session.commit()
+
+      nlp = sentiment_classifier.init_nlp()
+
+      for idx in range(num_threads):
+        Thread(target=launch_query, args=(idx, q, nlp, query, hours, session['user_id'], search.id), daemon=True).start()
+
+      for city in cities:
+        q.put(city)
+
+      q.join()    
+    else:
+      socketio.emit('tweets', { 'status': 'task_in_progress' })
+  except Exception as e:
     session['task_in_process'] = False
-
-  if session['task_in_process'] == False:
-    session['task_in_process'] = True
-    q = Queue(maxsize=0)
-
-    socketio.emit('tweets', { 'status': 'started' })
-
-    search = Search()
-    search.user_id = session['user_id']
-    search.query = query
-    db.session.add(search)
-    db.session.commit()
-
-    nlp = sentiment_classifier.init_nlp()
-
-    for idx in range(num_threads):
-      Thread(target=launch_query, args=(idx, q, nlp, query, hours, session['user_id'], search.id), daemon=True).start()
-
-    for city in cities:
-      q.put(city)
-
-    q.join()    
-  else:
-    socketio.emit('tweets', { 'status': 'task_in_progress' })
+    socketio.emit('tweets', { 'status': 'finished', 'message': str(e) })

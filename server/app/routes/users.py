@@ -30,6 +30,7 @@ def login():
 @cross_origin(supports_credentials=True)
 def logout():
   session.pop('user_id')
+  session.pop('task_in_process')
   return jsonify({}), 201
 
 @users_bp.route('/users/history', methods=['POST'])

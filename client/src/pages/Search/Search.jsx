@@ -94,6 +94,7 @@ function Search({ userData }) {
           '40%', // 992px upwards
         ]}
         alignItems="center"
+        marginBottom="2"
         onSubmit={handleSearch}
       >
         <PseudoBox

@@ -36,8 +36,9 @@ function History() {
       if (searches.length === 0) {
         try {
           const { data } = await getHistory();
-          setSearches(data);
-          console.log(data);
+          if (data.length > 0) {
+            setSearches(data);
+          }
         } catch (err) {
           console.log(err);
         }

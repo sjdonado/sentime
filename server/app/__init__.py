@@ -9,16 +9,16 @@ import eventlet
 
 from config import Config
 
+eventlet.monkey_patch()
+
+sess = Session()
+db = SQLAlchemy()
+
 logger = logging.getLogger(__name__)
 
 if Config.FLASK_ENV == 'production':
   logging.basicConfig(filename='server.log',level=logging.INFO)
   logging.basicConfig(filename='server.log',level=logging.ERROR)
-
-eventlet.monkey_patch()
-
-sess = Session()
-db = SQLAlchemy()
 
 app = Flask(__name__, instance_relative_config=False)
 

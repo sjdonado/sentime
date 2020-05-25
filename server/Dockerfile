@@ -13,6 +13,4 @@ RUN python -m spacy download es_core_news_md
 
 COPY . .
 
-ENV PYTHONUNBUFFERED=TRUE
-
 CMD gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT wsgi:app

@@ -16,7 +16,7 @@ from flask import session, Blueprint
 
 from flask_sqlalchemy import SQLAlchemy
 
-from .. import socketio, app, db
+from .. import socketio, app, db, logger
 from ..services import sentiment_classifier
 from ..models import Search, Result
 
@@ -128,6 +128,8 @@ def search(message):
   data = json.loads(message)
   query = data['query']
   hours = data['hours']
+
+  logger.info('Init search...')
 
   if 'task_in_process' not in session:
     session['task_in_process'] = False

@@ -9,10 +9,12 @@ services:
     ports:
       - 5000:5000
     environment:
+      PORT: 5000
       FLASK_ENV: development
       SECRET_KEY: 7a197fe73206411f84ca66fc
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgres://sentime_user:root_12345@db:5432/sentime
+      PYTHONUNBUFFERED: 1
     depends_on:
       - redis
   redis:

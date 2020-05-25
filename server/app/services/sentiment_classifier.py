@@ -10,7 +10,7 @@ from spacy.compat import pickle
 from tensorflow.keras.models import model_from_json
 import cytoolz
 
-from .. import app
+from .. import app, logger
 
 SPACY_CORE_MODEL = 'es_core_news_md'
 batch_size = 128
@@ -103,7 +103,7 @@ class SentimentAnalyser():
       doc.sentiment = y
 
 def init_nlp():
-  print('Loading nlp...', flush=True)
+  logger.info('Loading model...')
   with (DATA_PATH / "config.json").open() as file_:
     model = model_from_json(file_.read())
 
@@ -114,7 +114,7 @@ def init_nlp():
   nlp.add_pipe(nlp.create_pipe("sentencizer"))
   nlp.add_pipe(SentimentAnalyser.load(nlp, model, lstm_weights))
 
-  print('nlp loaded!', flush=True)
+  logger.info('Model loaded!')
   return nlp
 
 def get_scores(nlp, tweets):

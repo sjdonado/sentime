@@ -12,6 +12,7 @@ services:
       SECRET_KEY: 2Me7RCFDOB2BKdxKoRR5rshDwHH7EB6u
       REDIS_URL: redis://redis:6379
       DATABASE_URL: postgres://sentime_user:root_12345@db:5432/sentime
+      PYTHONUNBUFFERED: 1
     depends_on:
       - redis
   redis:

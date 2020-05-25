@@ -4,3 +4,4 @@ node_modules
 lib
 bin
 build
+server.log

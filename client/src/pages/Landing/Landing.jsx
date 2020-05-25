@@ -14,7 +14,7 @@ function Landing() {
   return (
     <div className={styles.container}>
       <div className={styles.phrase}>
-        <Text fontSize="5xl">Descubre la opinión de las personas, es gratis.</Text>
+        <Text fontSize="5xl">Sentime</Text>
       </div>
       <div className={styles.lower}>
         <div className={styles.child}>

@@ -154,3 +154,12 @@ INFO:engineio.server:Server initialized for eventlet.
 INFO:engineio.server:Server initialized for eventlet.
 INFO:engineio.server:Server initialized for eventlet.
 INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:Server initialized for eventlet.
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Sending packet OPEN data {'sid': '2f50ff20d8a24ee3ae97725ab6ee30ab', 'upgrades': ['websocket'], 'pingTimeout': 60000, 'pingInterval': 25000}
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Sending packet MESSAGE data 0
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Received request to upgrade to websocket
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Upgrade to websocket successful
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Received packet PING data None
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Sending packet PONG data None
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Received packet PING data None
+INFO:engineio.server:2f50ff20d8a24ee3ae97725ab6ee30ab: Sending packet PONG data None

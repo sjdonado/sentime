@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Text,
   Flex,
-  Button,
+  CloseButton,
 } from '@chakra-ui/core';
 
 import styles from './History.module.scss';
@@ -62,15 +62,11 @@ function History() {
               <Text fontWeight="bold" marginRight="2">Texto buscado:</Text>
               <Text>{selectedSearch.query}</Text>
             </Flex>
-            <Button
-              variantColor="teal"
-              variant="outline"
-              size="sm"
+            <CloseButton
+              size="lg"
               marginBottom="3"
               onClick={() => setSelectedSearch(null)}
-            >
-              Cerrar
-            </Button>
+            />
           </Flex>
           <SearchResults data={selectedSearch.results} />
         </Flex>

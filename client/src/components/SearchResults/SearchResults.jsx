@@ -13,7 +13,8 @@ import {
   ListIcon,
   Progress,
   Divider,
-  Button
+  Button,
+  CloseButton,
 } from '@chakra-ui/core';
 
 import { GOOGLE_MAPS_API_KEY } from '../../environment';
@@ -43,22 +44,65 @@ function SearchResults({
   status,
 }) {
   const [selectedRow, setSelectedRow] = useState();
+  const [toggleView, setToggleView] = useState(false);
 
   return (
     <Flex flexWrap="wrap">
-      {(!isProcesing && !selectedRow) && (
-        <Map
-          results={data}
-          googleMapURL={googleMapURL}
-          loadingElement={<div className={styles.map} />}
-          containerElement={<div className={styles.map} />}
-          mapElement={<div className={styles.map} />}
-        />
-      )}
+      <Flex flex="7" flexDirection="column">
+        <Button
+          variantColor="teal"
+          variant="outline"
+          size="sm"
+          onClick={() => setToggleView(!toggleView)}
+        >
+          {toggleView ? 'Ver mapa' : 'Ver gráfica'}
+        </Button>
+        {toggleView ? (
+          <Flex flexDirection="column">
+            <Text
+              margin="2"
+              width="100%"
+              textAlign="center"
+            >
+              Resultados por categorías
+            </Text>
+            <Bar
+              className={styles.chart}
+              data={{
+                labels: ['Positivos', 'Negativos', 'Neutrales'],
+                datasets: [{
+                  label: 'Total',
+                  data: [
+                    data.reduce((acum, { scores }) => acum + scores.positive, 0),
+                    data.reduce((acum, { scores }) => acum + scores.negative, 0),
+                    data.reduce((acum, { scores }) => acum + scores.neutral, 0),
+                  ],
+                  backgroundColor: 'rgba(255,99,132,0.2)',
+                  borderColor: 'rgba(255,99,132,1)',
+                  borderWidth: 1,
+                  hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+                  hoverBorderColor: 'rgba(255,99,132,1)',
+                }],
+              }}
+            />
+          </Flex>
+        ) : (
+          <Map
+            results={data}
+            googleMapURL={googleMapURL}
+            loadingElement={<div className={styles.map} />}
+            containerElement={<div className={styles.map} />}
+            mapElement={<div className={styles.map} />}
+          />
+        )}
+      </Flex>
       {selectedRow && (
-        <Flex flex="7" flexDirection="column" justifyContent="center" alignItems="center">
-          <Button onClick={() => setSelectedRow(null)}>Cerrar</Button>
-          <Text>{selectedRow.city}</Text>
+        <Flex flex="4" flexDirection="column" justifyContent="flex-start" alignItems="flex-end">
+          <CloseButton
+            size="lg"
+            onClick={() => setSelectedRow(null)}
+          />
+          <Text width="100%" textAlign="center" marginBottom="4">{selectedRow.city}</Text>
           <Pie
             className={styles.chart}
             data={{
@@ -106,31 +150,19 @@ function SearchResults({
                   <Text>{city.replace(', Colombia', '')}</Text>
                   <Text>{`${total} tweets`}</Text>
                 </Flex>
-                <Button onClick={() => setSelectedRow({ city, scores })}>Ver más</Button>
+                <Button
+                  size="sm"
+                  variantColor="teal"
+                  variant="solid"
+                  onClick={() => setSelectedRow({ city, scores })}
+                >
+                  Detalles
+                </Button>
               </Flex>
             </ListItem>
           ))}
         </List>
       </Flex>
-      <Bar
-        className={styles.chart}
-        data={{
-          labels: ['Positivos', 'Negativos', 'Neutrales'],
-          datasets: [{
-            label: 'Total',
-            data: [
-              data.reduce((acum, { scores }) => acum + scores.positive, 0),
-              data.reduce((acum, { scores }) => acum + scores.negative, 0),
-              data.reduce((acum, { scores }) => acum + scores.neutral, 0),
-            ],
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            borderColor: 'rgba(255,99,132,1)',
-            borderWidth: 1,
-            hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-            hoverBorderColor: 'rgba(255,99,132,1)',
-          }],
-        }}
-      />
     </Flex>
   );
 }

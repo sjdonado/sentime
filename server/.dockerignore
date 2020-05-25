@@ -3,4 +3,3 @@
 docker-compose.yml
 info.log
 README.md
-wsgi.py

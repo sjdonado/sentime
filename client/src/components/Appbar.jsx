@@ -45,7 +45,7 @@ function Appbar({ userData, logout }) {
             {name}
           </Button>
         ))}
-        <Text textAlign="center" marginLeft="2">{userData.email}</Text>
+        <Text textAlign="center" marginLeft="2" maxWidth="140px" isTruncated>{userData.email}</Text>
         <Button marginLeft="2" variantColor="pink" variant="outline" onClick={handleLogout}>Salir</Button>
       </Flex>
     </Flex>

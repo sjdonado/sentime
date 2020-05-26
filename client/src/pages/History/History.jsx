@@ -4,6 +4,7 @@ import {
   Text,
   Flex,
   CloseButton,
+  Divider,
 } from '@chakra-ui/core';
 
 import styles from './History.module.scss';
@@ -23,7 +24,7 @@ const columns = [
   },
   {
     Header: 'Fecha',
-    accessor: 'created_at',
+    accessor: 'date',
   },
 ];
 
@@ -37,7 +38,8 @@ function History() {
         try {
           const { data } = await getHistory();
           if (data.length > 0) {
-            setSearches(data);
+            const parsedData = data.map((elem) => ({ ...elem, date: new Date(elem.created_at).toLocaleString() }))
+            setSearches(parsedData);
           }
         } catch (err) {
           console.log(err);
@@ -57,11 +59,31 @@ function History() {
     <>
       <Text className={styles.title} fontSize="3xl">Historial de búsqueda</Text>
       {selectedSearch && (
-        <Flex flexDirection="column">
-          <Flex flexDirection="row" justifyContent="space-between" alignItems="center">
+        <Flex
+          flexDirection="column"
+          border="1px solid #E2E8F0"
+          borderRadius="4px"
+          margin="auto 4px"
+          padding="2"
+        >
+          <Flex
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            borderBottom="1px solid #E2E8F0"
+            marginBottom="22px"
+          >
             <Flex>
-              <Text fontWeight="bold" marginRight="2">Texto buscado:</Text>
+              <Text fontWeight="bold" marginRight="2">Identificador:</Text>
+              <Text>{selectedSearch.id}</Text>
+            </Flex>
+            <Flex>
+              <Text fontWeight="bold" marginRight="2">Resultados para el texto buscado:</Text>
               <Text>{selectedSearch.query}</Text>
+            </Flex>
+            <Flex>
+              <Text fontWeight="bold" marginRight="2">Fecha:</Text>
+              <Text>{selectedSearch.date}</Text>
             </Flex>
             <CloseButton
               size="lg"

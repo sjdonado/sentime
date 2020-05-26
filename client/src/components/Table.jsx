@@ -30,7 +30,6 @@ const getStyles = (props, align = 'left') => [
 ];
 
 const headerProps = (props, { column }) => getStyles(props, column.align);
-
 const cellProps = (props, { cell }) => getStyles(props, cell.column.align);
 
 const resizerProps = {
@@ -78,7 +77,16 @@ const Table = ({
   );
 
   return (
-    <Box {...getTableProps()} flex={1} fontSize="sm" mt={1} {...rest}>
+    <Box
+      {...getTableProps()}
+      flex={1}
+      fontSize="sm"
+      mt={1}
+      border="1px solid #E2E8F0"
+      borderRadius="4px"
+      margin="auto 0"
+      {...rest}
+    >
       <Box overflowY="auto" overflowX="hidden">
         {headerGroups.map((headerGroup, i) => (
           <Flex
@@ -119,8 +127,9 @@ const Table = ({
               onClick={onRowClick}
               cursor={onRowClick ? 'pointer' : undefined}
               _hover={{ bg: colorMode === 'dark' ? 'gray.700' : 'gray.100' }}
-              minHeight="24px"
-              lineHeight="24px"
+              minHeight="30px"
+              lineHeight="30px"
+              borderBottom="1px solid #E2E8F0"
             >
               {row.cells.map((cell) => (
                 <Text

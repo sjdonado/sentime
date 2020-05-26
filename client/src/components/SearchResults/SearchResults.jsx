@@ -38,6 +38,8 @@ const Map = withScriptjs(withGoogleMap(({ results }) => {
 
 const googleMapURL = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=visualization`;
 
+const cleanCity = (city) => city.replace(', Colombia', '').replace(' Province', '').replace(' Department', '')
+
 function SearchResults({
   data,
   isProcesing,
@@ -48,14 +50,14 @@ function SearchResults({
 
   return (
     <Flex flexWrap="wrap">
-      <Flex flex="7" flexDirection="column">
+      <Flex flex="7" flexDirection="column" padding="6px">
         <Button
           variantColor="teal"
           variant="outline"
           size="sm"
           onClick={() => setToggleView(!toggleView)}
         >
-          {toggleView ? 'Ver mapa' : 'Ver gráfica'}
+          {toggleView ? 'Ver mapa de calor' : 'Ver diagráma de barras'}
         </Button>
         {toggleView ? (
           <Flex flexDirection="column">
@@ -63,15 +65,16 @@ function SearchResults({
               margin="2"
               width="100%"
               textAlign="center"
+              fontWeight="bold"
             >
-              Resultados por categorías
+              Diagráma de barras: Clasificación de los tweets encontrados en Colombia 
             </Text>
             <Bar
               className={styles.chart}
               data={{
                 labels: ['Positivos', 'Negativos', 'Neutrales'],
                 datasets: [{
-                  label: 'Total',
+                  label: 'Cantidad',
                   data: [
                     data.reduce((acum, { scores }) => acum + scores.positive, 0),
                     data.reduce((acum, { scores }) => acum + scores.negative, 0),
@@ -87,49 +90,78 @@ function SearchResults({
             />
           </Flex>
         ) : (
-          <Map
-            results={data}
-            googleMapURL={googleMapURL}
-            loadingElement={<div className={styles.map} />}
-            containerElement={<div className={styles.map} />}
-            mapElement={<div className={styles.map} />}
-          />
+          <Flex flexDirection="column">
+            <Text
+              margin="2"
+              width="100%"
+              textAlign="center"
+              fontWeight="bold"
+            >
+              Mapa de calor: Clasificación de los tweets encontrados en todos los departamentos de Colombia (rojo/positivos)
+            </Text>
+            <Map
+              results={data}
+              googleMapURL={googleMapURL}
+              loadingElement={<div className={styles.map} />}
+              containerElement={<div className={styles.map} />}
+              mapElement={<div className={styles.map} />}
+            />
+          </Flex>
         )}
       </Flex>
-      {selectedRow && (
-        <Flex flex="4" flexDirection="column" justifyContent="flex-start" alignItems="flex-end">
-          <CloseButton
-            size="lg"
-            onClick={() => setSelectedRow(null)}
-          />
-          <Text width="100%" textAlign="center" marginBottom="4">{selectedRow.city}</Text>
-          <Pie
-            className={styles.chart}
-            data={{
-              labels: ['Positivos', 'Negativos', 'Neutrales'],
-              datasets: [{
-                data: [
-                  selectedRow.scores.positive,
-                  selectedRow.scores.negative,
-                  selectedRow.scores.neutral,
-                ],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)',
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)',
-                ],
-                borderWidth: 1,
-              }],
-            }}
-          />
-        </Flex>
-      )}
-      <Flex flexDirection="column" flex="3" padding="12px">
+      <Flex flexDirection="column" flex="3" padding="6px">
+        {selectedRow && (
+          <Flex
+            flex="4"
+            flexDirection="column"
+            justifyContent="flex-start"
+            alignItems="flex-end"
+            border="1px solid #E2E8F0"
+            padding="2"
+            borderRadius="4px"
+            marginBottom="12px"
+          >
+            <Flex>
+              <Text
+                margin="2"
+                width="100%"
+                textAlign="center"
+                fontWeight="bold"
+              >
+                Clasificación para este departamento
+              </Text>
+              <CloseButton
+                size="lg"
+                onClick={() => setSelectedRow(null)}
+              />
+            </Flex>
+            <Text width="100%" textAlign="center" marginTop="2" marginBottom="4">{selectedRow.city}</Text>
+            <Pie
+              className={styles.chart}
+              data={{
+                labels: ['Positivos', 'Negativos', 'Neutrales'],
+                datasets: [{
+                  data: [
+                    selectedRow.scores.positive,
+                    selectedRow.scores.negative,
+                    selectedRow.scores.neutral,
+                  ],
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                  ],
+                  borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                  ],
+                  borderWidth: 1,
+                }],
+              }}
+            />
+          </Flex>
+        )}
         <Progress
           color="teal"
           isAnimated={isProcesing}
@@ -141,13 +173,13 @@ function SearchResults({
         <Text>{`Departamentos: ${data.length} de 32`}</Text>
         <Text>{`Total: ${data.reduce((acum, elem) => acum + elem.total, 0)} tweets`}</Text>
         <Divider />
-        <List spacing={3} height="400px" overflow="scroll">
+        <List spacing={3} height="450px" overflow="scroll">
           {data.map(({ city, total, scores }) => (
             <ListItem className={styles.statistic}>
               <ListIcon icon="check-circle" color="green.500" />
               <Flex className={styles['list-item-container']} justifyContent="flex-end" width="100%">
                 <Flex alignItems="center" justifyContent="space-between" width="100%">
-                  <Text>{city.replace(', Colombia', '')}</Text>
+                  <Text>{cleanCity(city)}</Text>
                   <Text>{`${total} tweets`}</Text>
                 </Flex>
                 <Button

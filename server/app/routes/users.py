@@ -30,7 +30,8 @@ def login():
 @cross_origin(supports_credentials=True)
 def logout():
   session.pop('user_id')
-  session.pop('task_in_process')
+  if 'task_in_process' in session:
+    session.pop('task_in_process')
   return jsonify({}), 201
 
 @users_bp.route('/users/history', methods=['POST'])
@@ -38,6 +39,16 @@ def logout():
 def history():
   response = []
   searches = db.session.query(Search).filter_by(user_id=session['user_id'])
+  for search in searches:
+    response.append(search.to_JSON())
+
+  return(jsonify(response))
+
+@users_bp.route('/users/allhistory', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def all_history():
+  response = []
+  searches = db.session.query(Search).all()
   for search in searches:
     response.append(search.to_JSON())
 

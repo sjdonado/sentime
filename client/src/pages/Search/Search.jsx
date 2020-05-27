@@ -8,12 +8,15 @@ import {
   PseudoBox,
   Button,
   Text,
+  Select,
 } from '@chakra-ui/core';
 
 // import styles from './Search.module.scss';
 
 import { SOCKET_IO_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
+
+import styles from './Search.module.scss';
 
 const socket = socketIOClient(SOCKET_IO_URL);
 
@@ -24,6 +27,7 @@ function Search({ userData }) {
     status: '',
     results: [],
   });
+  const [hours, setHours] = useState(2);
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
 
@@ -77,7 +81,7 @@ function Search({ userData }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    socket.emit('search', JSON.stringify({ query, hours: 2 }));
+    socket.emit('search', JSON.stringify({ query, hours }));
     setMessage('Búsqueda enviada!, esperando aprobación...');
   };
 
@@ -118,6 +122,11 @@ function Search({ userData }) {
           onChange={(e) => setQuery(e.target.value)}
           disabled={isProcesing}
         />
+        <Select className={styles.select} onChange={(e) => setHours(Number(e.target.value))} placeholder="Seleccione intervalo de horas" width="270px">
+          <option value="2">&lt;2 Horas</option>
+          <option value="8">&lt;8 Horas</option>
+          <option value="24">&lt;24 Horas</option>
+        </Select>
         <Button
           type="submit"
           variantColor="teal"

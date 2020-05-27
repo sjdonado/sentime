@@ -13,7 +13,7 @@ import { userLogout } from '../services/userService';
 function Appbar({ userData, logout }) {
   const location = useLocation();
 
-  console.log(userData)
+  console.log(userData);
 
   const handleLogout = async () => {
     try {
@@ -27,6 +27,7 @@ function Appbar({ userData, logout }) {
   const routes = [
     { name: 'Búsqueda', path: '/search' },
     { name: 'Historial', path: '/history' },
+    { name: 'Repositorio', path: '/allhistory' },
   ];
 
   return (
@@ -55,7 +56,7 @@ function Appbar({ userData, logout }) {
 Appbar.propTypes = {
   userData: PropTypes.shape({
     id: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired
+    email: PropTypes.string.isRequired,
   }).isRequired,
   logout: PropTypes.func.isRequired,
 };

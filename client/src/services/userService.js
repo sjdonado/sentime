@@ -21,3 +21,9 @@ export const getHistory = () => axios({
   url: `${API_URL}/${basePath}/history`,
   withCredentials: true,
 });
+
+export const getAllHistory = () => axios({
+  method: 'post',
+  url: `${API_URL}/${basePath}/allhistory`,
+  withCredentials: true,
+});

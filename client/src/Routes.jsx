@@ -21,10 +21,11 @@ import Search from './pages/Search/Search';
 import Landing from './pages/Landing/Landing';
 import Register from './pages/Register/Register';
 import History from './pages/History/History';
+import AllHistory from './pages/AllHistory/AllHistory';
 
 const USER_DATA_COOKIE = 'session-user';
 
-  function Routes() {
+function Routes() {
   const [cookies, setCookie, removeCookie] = useCookies([USER_DATA_COOKIE]);
 
   const setUserData = (id, email) => {
@@ -32,12 +33,12 @@ const USER_DATA_COOKIE = 'session-user';
   };
 
   const getUserData = () => {
-    const [id, email] = cookies[USER_DATA_COOKIE] ? cookies[USER_DATA_COOKIE].split(',') : ''
+    const [id, email] = cookies[USER_DATA_COOKIE] ? cookies[USER_DATA_COOKIE].split(',') : '';
     return {
       id: Number(id),
-      email
-    }
-  }
+      email,
+    };
+  };
 
   const logout = () => {
     removeCookie(USER_DATA_COOKIE, { path: '/' });
@@ -48,7 +49,7 @@ const USER_DATA_COOKIE = 'session-user';
       isPublic: true,
       exact: true,
       path: '/',
-      children: <Landing />,
+      children: <Landing setUserData={setUserData} />,
     },
     {
       isPublic: true,
@@ -61,14 +62,14 @@ const USER_DATA_COOKIE = 'session-user';
       children: <History />,
     },
     {
-      isPublic: true,
-      path: '/login',
-      children: <Login setUserData={setUserData} />,
+      isPublic: false,
+      path: '/allhistory',
+      children: <AllHistory />,
     },
     {
       isPublic: false,
       path: '/search',
-      children: <Search userData={getUserData()}/>,
+      children: <Search userData={getUserData()} />,
     },
   ];
 

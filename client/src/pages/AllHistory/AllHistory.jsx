@@ -7,8 +7,8 @@ import {
   Divider,
 } from '@chakra-ui/core';
 
-import styles from './History.module.scss';
-import { getHistory } from '../../services/userService';
+import styles from './AllHistory.module.scss';
+import { getAllHistory } from '../../services/userService';
 
 import Table from '../../components/Table';
 import SearchResults from '../../components/SearchResults/SearchResults';
@@ -28,7 +28,7 @@ const columns = [
   },
 ];
 
-function History() {
+function AllHistory() {
   const [searches, setSearches] = useState([]);
   const [selectedSearch, setSelectedSearch] = useState();
 
@@ -36,7 +36,7 @@ function History() {
     async function fetch() {
       if (searches.length === 0) {
         try {
-          const { data } = await getHistory();
+          const { data } = await getAllHistory();
           if (data.length > 0) {
             const parsedData = data.map((elem) => ({ ...elem, date: new Date(elem.created_at).toLocaleString() }));
             setSearches(parsedData);
@@ -57,7 +57,7 @@ function History() {
 
   return (
     <>
-      <Text className={styles.title} fontSize="3xl">Historial personal de búsqueda</Text>
+      <Text className={styles.title} fontSize="3xl">Historial global de búsqueda</Text>
       {selectedSearch && (
         <Flex
           flexDirection="column"
@@ -104,4 +104,4 @@ function History() {
   );
 }
 
-export default History;
+export default AllHistory;

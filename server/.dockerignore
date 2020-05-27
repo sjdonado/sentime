@@ -3,3 +3,4 @@
 docker-compose.yml
 info.log
 README.md
+migrations

@@ -8,11 +8,11 @@ body {
 
 .container{
   display: flex;
+  width:100vw;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 36px;
-  margin: 12px;
 }
 
 .lower{
@@ -29,7 +29,7 @@ body {
 
 .form-control {
   margin: 10px 0;
-  width: 60%;
+  width: 80%;
 }
 
 .button{
@@ -43,4 +43,30 @@ body {
 
 .image{
   width:60%;
+}
+
+.login{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+  padding-left: 128px;
+  background-color: whitesmoke;
+  border-left: 1px solid rgba(128, 128, 128, 0.5);
+  min-width: 500px;
+  h1 {
+    font-size: 32px;
+    margin-bottom: 48px;
+  }
+  .form-control {
+    margin: 12px 0;
+  }
+  .submit-btn {
+    margin: 12px 0;
+  }
+}
+
+.description {
+  margin-top: 30px;
 }

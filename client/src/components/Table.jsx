@@ -153,7 +153,7 @@ const Table = ({
 Table.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.any).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
   emptyMessage: PropTypes.string,
   onRowClick: PropTypes.func.isRequired,
 };

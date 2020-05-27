@@ -14,8 +14,6 @@ import {
 
 import styles from './Landing.module.scss';
 
-// import { ReactComponent as Analytics } from '../../assets/web-analytics.svg';
-
 import { login } from '../../services/userService';
 
 function Landing({ setUserData }) {
@@ -57,8 +55,15 @@ function Landing({ setUserData }) {
       <div className={styles.container}>
         <div className={styles.phrase}>
           <Text fontSize="5xl">Sentime</Text>
-          <Text className={styles.description} fontSize="2xl">Description</Text>
-          <Button marginTop="10px" leftIcon="email" variantColor="teal" onClick={() => window.open('mailto:pastorizoj@uninorte.edu.co?subject=Solicitud%20demo%20Sentime', '_blank')} target="blank">Solicitar Demo</Button>
+          <Text className={styles.description} fontSize="2xl" marginBottom="6px">
+            Analiza los sentimientos de tweets Colombianos.
+          </Text>
+          <p>
+            Sentime se encarga de buscar por ti tweets en los 32 departamentos de Colombia,
+            sólo necesitas ingresar una palabra, seleccionar el intervalo de horas
+            y hacer click en buscar!
+          </p>
+          <Button marginTop="24px" leftIcon="email" variantColor="teal" onClick={() => window.open('mailto:pastorizoj@uninorte.edu.co?subject=Solicitud%20demo%20Sentime', '_blank')} target="blank">Solicitar Demo</Button>
         </div>
         <Flex className={styles.lower} alignItems="center" justifyContent="space-between">
           <Flex paddingRight="92px">
@@ -66,7 +71,7 @@ function Landing({ setUserData }) {
           </Flex>
           <Flex justifyContent="flex-start" width="100%" flex="5">
             <div className={styles.login}>
-              <Text fontSize="3xl" marginBottom="24px">Login</Text>
+              <Text fontSize="3xl" marginBottom="24px">¿Ya tienes una cuenta? Inicia sesión</Text>
               <FormControl className={styles['form-control']}>
                 <FormLabel htmlFor="email">Correo electrónico</FormLabel>
                 <Input

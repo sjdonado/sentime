@@ -27,7 +27,7 @@ function Search({ userData }) {
     status: '',
     results: [],
   });
-  const [hours, setHours] = useState(2);
+  const [hours, setHours] = useState(0);
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
 
@@ -50,7 +50,6 @@ function Search({ userData }) {
           total,
           scores,
         } = data;
-        console.log('total tweets =>', total, 'scores =>', scores);
         setSearchData({
           status,
           results: [
@@ -93,9 +92,9 @@ function Search({ userData }) {
         as="form"
         width={[
           '100%', // base
-          '75%', // 480px upwards
-          '50%', // 768px upwards
-          '40%', // 992px upwards
+          '85%', // 480px upwards
+          '60%', // 768px upwards
+          '50%', // 992px upwards
         ]}
         alignItems="center"
         marginBottom="2"
@@ -108,31 +107,31 @@ function Search({ userData }) {
           flex="1"
           py={2}
           px={4}
+          color="gray.600"
           rounded="md"
-          bg="gray.100"
           borderWidth="1px"
-          _hover={{ borderColor: 'gray.200', bg: 'gray.200' }}
-          _focus={{
-            outline: 'none',
-            bg: 'white',
-            boxShadow: 'outline',
-            borderColor: 'gray.300',
-          }}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           disabled={isProcesing}
         />
-        <Select className={styles.select} onChange={(e) => setHours(Number(e.target.value))} placeholder="Seleccione intervalo de horas" width="270px">
-          <option value="2">&lt;2 Horas</option>
-          <option value="8">&lt;8 Horas</option>
-          <option value="24">&lt;24 Horas</option>
+        <Select
+          className={styles.select}
+          color="gray.600"
+          onChange={(e) => setHours(Number(e.target.value))}
+          placeholder="Seleccione intervalo de horas"
+          width="270px"
+        >
+          <option value="2">&lt; 2 Horas</option>
+          <option value="8">&lt; 8 Horas</option>
+          <option value="24">&lt; 24 Horas</option>
         </Select>
         <Button
           type="submit"
           variantColor="teal"
           size="md"
           marginLeft="3"
-          disabled={isProcesing || (query && query.length === 0) || message !== DEFAULT_MESSAGE}
+          disabled={isProcesing || (query && query.length === 0)
+            || hours === 0 || message !== DEFAULT_MESSAGE}
         >
           Buscar
         </Button>
@@ -144,7 +143,7 @@ function Search({ userData }) {
           status={searchData.status}
         />
       ) : (
-        <Text marginTop="6" textAlign="center">{message}</Text>
+        <Text marginTop="12" textAlign="center">{message}</Text>
       )}
     </>
   );

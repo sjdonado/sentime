@@ -16,7 +16,6 @@ import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
 import Appbar from './components/Appbar';
 
-import Login from './pages/Login/Login';
 import Search from './pages/Search/Search';
 import Landing from './pages/Landing/Landing';
 import Register from './pages/Register/Register';

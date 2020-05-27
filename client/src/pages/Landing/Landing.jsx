@@ -14,7 +14,7 @@ import {
 
 import styles from './Landing.module.scss';
 
-import { ReactComponent as Analytics } from '../../assets/web-analytics.svg';
+// import { ReactComponent as Analytics } from '../../assets/web-analytics.svg';
 
 import { login } from '../../services/userService';
 

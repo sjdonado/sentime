@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   CloseButton,
-  Divider,
 } from '@chakra-ui/core';
 
 import styles from './History.module.scss';
@@ -38,7 +37,10 @@ function History() {
         try {
           const { data } = await getHistory();
           if (data.length > 0) {
-            const parsedData = data.map((elem) => ({ ...elem, date: new Date(elem.created_at).toLocaleString() }));
+            const parsedData = data.map((elem) => ({
+              ...elem,
+              date: new Date(elem.created_at).toLocaleString(),
+            }));
             setSearches(parsedData);
           }
         } catch (err) {

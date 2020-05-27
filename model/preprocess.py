@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import pandas as pd
+import numpy as np
 from cleaner import clean_tweet
 
 if __name__ == '__main__':
@@ -13,8 +14,8 @@ if __name__ == '__main__':
   tweets_path = os.path.join(os.getcwd(), 'data', date, "tweets.csv")
 
   tweets = pd.read_csv(tweets_path, encoding='UTF-8')
-  tweets = pd.DataFrame([clean_tweet(tweet) for tweet in tweets['tweet'].to_numpy()])
-  tweets = tweets[tweets != '']
+  tweets = pd.DataFrame([clean_tweet(tweet) for tweet in tweets['tweet']])
+  tweets.replace('', np.nan, inplace=True)
 
   output_path = os.path.join(os.getcwd(), 'data', date, "tweets_parsed.txt")
 

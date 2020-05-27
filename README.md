@@ -6,10 +6,10 @@
 - 6123 Negative
 
 2020_05_24_dataset.csv: 53366 tweets:
-  - 19534 Neutral
-  - 17483 Positive
-  - 12376 Negative
-  - 3972 Mixed
+- 19534 Neutral
+- 17483 Positive
+- 12376 Negative
+- 3972 Mixed
 
 ## How to run?
 * Server

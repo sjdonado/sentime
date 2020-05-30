@@ -1,136 +1,137 @@
 import os
 import re
 import string
-import emoji
-import pathlib
 
+import torch.nn as nn
 import numpy as np
+import torch
 import spacy
-from spacy.compat import pickle
-from tensorflow.keras.models import model_from_json
-import cytoolz
+from spacymoji import Emoji
+from fse.models import SIF
 
 from .. import app, logger
 
 SPACY_CORE_MODEL = 'es_core_news_md'
-batch_size = 128
-DATA_PATH = pathlib.Path(os.path.join(app.static_folder, 'data'))
+DATA_PATH = os.path.join(app.static_folder, 'data')
 
-def get_labelled_sentences(docs, doc_labels):
-    labels = []
-    sentences = []
-    for doc, y in zip(docs, doc_labels):
-        for sent in doc.sents:
-            sentences.append(sent)
-            labels.append(y)
-    return sentences, np.asarray(labels, dtype="int32")
-
-def get_features(docs, max_length):
-    docs = list(docs)
-    Xs = np.zeros((len(docs), max_length), dtype="int32")
-    for i, doc in enumerate(docs):
-        j = 0
-        for token in doc:
-            vector_id = token.vocab.vectors.find(key=token.orth)
-            if vector_id >= 0:
-                Xs[i, j] = vector_id
-            else:
-                Xs[i, j] = 0
-            j += 1
-            if j >= max_length:
-                break
-    return Xs
-
-def clean_tweet(text, remove_emojis=False):
+def clean_tweet(text):
   # Remove imgs
   text = re.sub(r'pic.twitter\S+', '', text)
   # Remove links
   text = re.sub(r'http\S+', '', text)
   # Remove mentions and hashtags
-  text = ' '.join(re.sub('(\s?[@#][\w_-]+)|(@[A-Za-z0-9]+)|(#\s?[A-Za-z0-9]+)', ' ', text).split())
-  if remove_emojis:
-    # Remove emojis
-    text = emoji.get_emoji_regexp().sub('', text)
+  text = ' '.join(re.sub('(\s?[@#][\w_-]+)', '', text).split())
   # Remove puntuation
   text = re.sub(r'[\_\-\.\,\;]', ' ', text)
-  text = re.sub(r'[\#\!\?\:\-\=]', '', text)
+  # text = re.sub(r'[\#\!\?\:\-\=]', '', text)
   # Remove multiple spaces
   text = re.sub(r'\s\s+', ' ', text.lower())
   # Remove breaklines
   text = ''.join([c for c in text if c != '\n' and c != '\r']).strip()
-
   return text.lower()
 
-class SentimentAnalyser():
-    @staticmethod
-    def get_embeddings(vocab):
-      return vocab.vectors.data
+class Net(nn.Module):
+  """Class neural net with the architecture definition"""
+  def __init__(self, input_size, hidden_size, output_size, n_layers, 
+               bidirectional, dropout):
+    super(Net, self).__init__()
+    self.lstm = nn.LSTM(
+      input_size, hidden_size, 
+      num_layers=n_layers,
+      bidirectional=bidirectional,
+      dropout=dropout
+    )
 
-    @classmethod
-    def load(cls, nlp, model, lstm_weights, max_length=140):
-      embeddings = cls.get_embeddings(nlp.vocab)
-      model.set_weights([embeddings] + lstm_weights)
-      return cls(model, max_length=max_length)
+    self.head_layers = nn.Sequential(
+      nn.Dropout(dropout),
+      nn.Linear(2*hidden_size, hidden_size),
+      nn.Dropout(dropout),
+      nn.ReLU(),
+      nn.Linear(hidden_size, output_size),
+      nn.Dropout(dropout)
+    )
 
-    @classmethod
-    def predict(cls, nlp, texts):
-      docs = nlp.pipe(texts, batch_size=batch_size)
-      return [doc.sentiment for doc in docs]
+  def forward(self, x):
+    lstm_out, _ = self.lstm(x.view(len(x), 1, -1))
+    x = self.head_layers(lstm_out.view(len(x), -1))
+    return x
 
-    def __init__(self, model, max_length=100):
-      self._model = model
-      self.max_length = max_length
+class SentimentClasssifier():
+  model = None
+  fse_model = None
+  nlp = None
+  device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    def __call__(self, doc):
-      X = get_features([doc], self.max_length)
-      y = self._model.predict(X)
-      self.set_sentiment(doc, y)
+  @classmethod
+  def get_model(cls):
+    """Get the model object for this instance, loading it if it's not already loaded."""
+    if cls.model == None:
+      # Loading embedding model
+      cls.fse_model = SIF.load(os.path.join(DATA_PATH, "embedding_model.pt"))
+      # Loading model
+      cls.model = Net(300, 100, 3, 3, True, 0.5).cpu()
+      cls.model.load_state_dict(torch.load(os.path.join(DATA_PATH, "model.pt"), map_location=cls.device))
+      cls.model.eval().to(cls.device)
+    return cls.model
 
-    def pipe(self, docs, batch_size=batch_size):
-      for minibatch in cytoolz.partition_all(batch_size, docs):
-        minibatch = list(minibatch)
-        sentences = []
-        for doc in minibatch:
-          sentences.extend(doc.sents)
-        Xs = get_features(sentences, self.max_length)
-        ys = self._model.predict(Xs)
-        for sent, label in zip(sentences, ys):
-          sent.doc.sentiment += np.argmax(label) - 1
-        for doc in minibatch:
-          yield doc
+  @classmethod
+  def get_nlp(cls):
+    """Get the nlp object for this instance, loading it if it's not already loaded."""
+    if cls.nlp == None:
+      cls.nlp = spacy.load(SPACY_CORE_MODEL)
+      cls.nlp.add_pipe(Emoji(cls.nlp, merge_spans=False), first=True)
+    return cls.nlp
+    
+  @classmethod
+  def preprocess(cls, tweet):
+    vector = cls.nlp(clean_tweet(tweet))
+    vector = [token for token in vector if not token.is_punct]
+    vector = [token for token in vector if not token.like_num]
+    vector = [token for token in vector if not token._.is_emoji]
+    vector = [token.text.lower() for token in vector]
+    vector = cls.fse_model.infer([(vector, 0)])
 
-    def set_sentiment(self, doc, y):
-      doc.sentiment = y
+    return vector
 
-def init_nlp():
-  logger.info('Loading model...')
-  with (DATA_PATH / "config.json").open() as file_:
-    model = model_from_json(file_.read())
+  @classmethod
+  def predict(cls, tweets):
+    """
+    Classify an array of tweets by sentimens NEGATIVE, NEUTRAL and POSITIVE
+    Args:
+      tweets -- Array of strings
+    Return: 
+      Array of ints [-1, 0, 1]
+    """
+    if len(tweets) == 0:
+      return []
 
-  with (DATA_PATH / "model").open("rb") as file_:
-    lstm_weights = pickle.load(file_)
+    tweets = [cls.preprocess(tweet) for tweet in tweets]
+    outputs = cls.model(torch.Tensor(tweets).cpu().float())
+    _, preds = torch.max(outputs, 1)
 
-  nlp = spacy.load(SPACY_CORE_MODEL)
-  nlp.add_pipe(nlp.create_pipe("sentencizer"))
-  nlp.add_pipe(SentimentAnalyser.load(nlp, model, lstm_weights))
+    with torch.no_grad():
+      return preds.cpu().numpy() - 1
 
-  logger.info('Model loaded!')
-  return nlp
+def get_scores(tweets):
+  if SentimentClasssifier.get_model() is not None and SentimentClasssifier.get_nlp() is not None:
+    scores = SentimentClasssifier.predict(tweets)
+    print(scores, flush=True)
+    positive = 0
+    negative = 0
+    neutral = 0
+    if (len(scores) > 0):
+      positive = np.sum(scores == 1)
+      neutral = np.sum(scores == 0)
+      negative = np.sum(scores == -1)
+    
+    return {
+      'positive': int(positive),
+      'neutral': int(neutral),
+      'negative': int(negative)
+    }
 
-def get_scores(nlp, tweets):
-  tweets = [clean_tweet(tweet) for tweet in tweets]
-  scores = SentimentAnalyser.predict(nlp, tweets)
+def get_health():
+  model_health = SentimentClasssifier.get_model() is not None
+  nlp_health = SentimentClasssifier.get_nlp() is not None
 
-  positive = 0
-  negative = 0
-  for score in scores:
-    if score == 1:
-      positive += 1
-    if score == -1:
-      positive += 1
-  
-  return {
-    'positive': positive,
-    'negative': negative,
-    'neutral': len(scores) - (positive + negative)
-  }
+  return model_health and nlp_health

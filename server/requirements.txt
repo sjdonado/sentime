@@ -17,10 +17,8 @@ psycopg2-binary
 Werkzeug
 numpy
 pandas
-pathlib
-seaborn
-sklearn
-keras
-emoji
+torch
 spacy
-cytoolz
+spacymoji
+gensim
+fse

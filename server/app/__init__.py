@@ -7,6 +7,34 @@ from flask_socketio import SocketIO, emit
 from flask_sqlalchemy import SQLAlchemy
 import eventlet
 
+import torch.nn as nn
+
+class Net(nn.Module):
+  """Class neural net with the architecture definition"""
+  def __init__(self, input_size, hidden_size, output_size, n_layers, 
+               bidirectional, dropout):
+    super(Net, self).__init__()
+    self.lstm = nn.LSTM(
+      input_size, hidden_size, 
+      num_layers=n_layers,
+      bidirectional=bidirectional,
+      dropout=dropout
+    )
+
+    self.head_layers = nn.Sequential(
+      nn.Dropout(dropout),
+      nn.Linear(2*hidden_size, hidden_size),
+      nn.Dropout(dropout),
+      nn.ReLU(),
+      nn.Linear(hidden_size, output_size),
+      nn.Dropout(dropout)
+    )
+
+  def forward(self, x):
+    lstm_out, _ = self.lstm(x.view(len(x), 1, -1))
+    x = self.head_layers(lstm_out.view(len(x), -1))
+    return x
+
 from config import Config
 
 eventlet.monkey_patch()

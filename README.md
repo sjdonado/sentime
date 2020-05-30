@@ -56,3 +56,6 @@ Go to model folder and follow the next steps:
   - Use `db`instead of `localhost` in the address field
   - User: `sentime_user`
   - Password: `root_12345`
+
+## Load model
+Go to `http://localhost:5000/search/status`

@@ -60,7 +60,7 @@ function SearchResults({
       <Flex flex="7" flexDirection="column" padding="6px" minWidth="700px">
         <Button
           variantColor="teal"
-          variant="outline"
+          variant="solid"
           size="sm"
           onClick={() => setToggleView(!toggleView)}
         >

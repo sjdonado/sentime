@@ -73,7 +73,7 @@ def get_geo(city):
   )
   return geo
 
-def launch_query(idx, q, nlp, query, hours, user_id, search_id):
+def launch_query(q, nlp, query, hours, user_id, search_id):
   while True:
     city = q.get()
 
@@ -114,10 +114,9 @@ def launch_query(idx, q, nlp, query, hours, user_id, search_id):
         }
       })
 
-      if (idx == 32):
+      # Validate if this one is the last item 
+      if q.qsize() == 1:
         socketio.emit('tweets', { 'status': 'finished' })
-        with app.app_context():
-          session['task_in_process'] = False
 
       q.task_done()
 
@@ -150,7 +149,7 @@ def search(message):
       nlp = sentiment_classifier.init_nlp()
 
       for idx in range(num_threads):
-        Thread(target=launch_query, args=(idx, q, nlp, query, hours, session['user_id'], search.id), daemon=True).start()
+        Thread(target=launch_query, args=(q, nlp, query, hours, session['user_id'], search.id), daemon=True).start()
 
       for city in cities:
         q.put(city)

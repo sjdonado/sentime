@@ -39,15 +39,16 @@ function Appbar({ userData, logout }) {
             key={path}
             marginLeft="2"
             variantColor="teal"
-            variant={location.pathname.includes(path) ? 'solid' : 'outline'}
+            variant="link"
+            fontWeight={location.pathname.includes(path) ? 'bold' : 'regular'}
             as={Link}
             to={path}
           >
             {name}
           </Button>
         ))}
-        <Text textAlign="center" marginLeft="2" maxWidth="140px" isTruncated>{userData.email}</Text>
-        <Button marginLeft="2" variantColor="pink" variant="outline" onClick={handleLogout}>Salir</Button>
+        <Text textAlign="center" marginLeft="12" maxWidth="160px" isTruncated>{userData.email}</Text>
+        <Button marginLeft="2" variantColor="pink" variant="link" onClick={handleLogout}>Cerrar sesión</Button>
       </Flex>
     </Flex>
   );

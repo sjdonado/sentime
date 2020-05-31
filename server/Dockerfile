@@ -1,10 +1,8 @@
-FROM tensorflow/tensorflow:2.1.0-py3 as builder
-
-FROM builder
+FROM python:3.6.9
 
 WORKDIR /usr/src
 
-RUN pip3 install gunicorn
+RUN pip install gunicorn
 
 COPY ./requirements.txt .
 RUN pip3 install  -r requirements.txt

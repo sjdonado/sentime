@@ -45,7 +45,6 @@ function Routes() {
 
   const routes = [
     {
-      isPublic: true,
       exact: true,
       path: '/',
       children: <Landing setUserData={setUserData} />,
@@ -76,20 +75,29 @@ function Routes() {
     <Router>
       <Switch>
         {routes.map(({
-          isPublic, path, children, exact,
+          isPublic,
+          path,
+          children,
+          exact,
         }) => (
           <Route key={path} path={path} exact={exact}>
-            {isPublic ? (
-              <PublicRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
-                {children}
-              </PublicRoute>
+            {typeof isPublic === 'undefined' ? (
+              <>{children}</>
             ) : (
-              <PrivateRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
-                <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
-                  <Appbar userData={getUserData()} logout={logout} />
-                  {children}
-                </Flex>
-              </PrivateRoute>
+              <>
+                {isPublic ? (
+                  <PublicRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
+                    {children}
+                  </PublicRoute>
+                ) : (
+                  <PrivateRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
+                    <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
+                      <Appbar userData={getUserData()} logout={logout} />
+                      {children}
+                    </Flex>
+                  </PrivateRoute>
+                )}
+              </>
             )}
           </Route>
         ))}

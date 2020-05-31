@@ -5,9 +5,9 @@ import string
 import torch.nn as nn
 import numpy as np
 import torch
+import dill
 import spacy
 from spacymoji import Emoji
-from fse.models import SIF
 
 from .. import app, logger
 
@@ -31,45 +31,48 @@ def clean_tweet(text):
   return text.lower()
 
 class Net(nn.Module):
-  """Class neural net with the architecture definition"""
-  def __init__(self, input_size, hidden_size, output_size, n_layers, 
-               bidirectional, dropout):
-    super(Net, self).__init__()
-    self.lstm = nn.LSTM(
-      input_size, hidden_size, 
-      num_layers=n_layers,
-      bidirectional=bidirectional,
-      dropout=dropout
-    )
-
-    self.head_layers = nn.Sequential(
-      nn.Dropout(dropout),
-      nn.Linear(2*hidden_size, hidden_size),
-      nn.Dropout(dropout),
-      nn.ReLU(),
-      nn.Linear(hidden_size, output_size),
-      nn.Dropout(dropout)
-    )
-
-  def forward(self, x):
-    lstm_out, _ = self.lstm(x.view(len(x), 1, -1))
-    x = self.head_layers(lstm_out.view(len(x), -1))
-    return x
+  def __init__(self, vocab_size, embedding_dim, hidden_dim, output_dim, n_layers, 
+                bidirectional, dropout, pad_idx):
+    super().__init__()
+    self.embedding = nn.Embedding(vocab_size, embedding_dim, padding_idx = pad_idx)
+    self.rnn = nn.LSTM(embedding_dim, 
+                        hidden_dim, 
+                        num_layers=n_layers, 
+                        bidirectional=bidirectional, 
+                        dropout=dropout)
+    self.fc = nn.Linear(hidden_dim * 2, output_dim)
+    self.dropout = nn.Dropout(dropout)
+        
+  def forward(self, text, text_lengths):
+    embedded = self.dropout(self.embedding(text))
+    #pack sequence
+    packed_embedded = nn.utils.rnn.pack_padded_sequence(embedded, text_lengths)
+    packed_output, (hidden, cell) = self.rnn(packed_embedded)
+    #unpack sequence
+    output, output_lengths = nn.utils.rnn.pad_packed_sequence(packed_output)
+    hidden = self.dropout(torch.cat((hidden[-2,:,:], hidden[-1,:,:]), dim = 1))
+            
+    return self.fc(hidden)
 
 class SentimentClasssifier():
   model = None
-  fse_model = None
+  TEXT = None
+  LABEL = None
   nlp = None
-  device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+  device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
   @classmethod
   def get_model(cls):
     """Get the model object for this instance, loading it if it's not already loaded."""
     if cls.model == None:
-      # Loading embedding model
-      cls.fse_model = SIF.load(os.path.join(DATA_PATH, "embedding_model.pt"))
+      # Loading vocab models
+      with open(os.path.join(DATA_PATH, "TEXT.Field"), 'rb') as f:
+        cls.TEXT = dill.load(f)
+      with open(os.path.join(DATA_PATH, "LABEL.Field"), 'rb') as f:
+        cls.LABEL = dill.load(f)
+
       # Loading model
-      cls.model = Net(300, 100, 3, 3, True, 0.5).cpu()
+      cls.model = Net(len(cls.TEXT.vocab), 300, 256, 3, 2, True, 0.5, cls.TEXT.vocab.stoi[cls.TEXT.pad_token])
       cls.model.load_state_dict(torch.load(os.path.join(DATA_PATH, "model.pt"), map_location=cls.device))
       cls.model.eval().to(cls.device)
     return cls.model
@@ -83,18 +86,17 @@ class SentimentClasssifier():
     return cls.nlp
     
   @classmethod
-  def preprocess(cls, tweet):
+  def tokenizer_tweet(cls, tweet):
     vector = cls.nlp(clean_tweet(tweet))
     vector = [token for token in vector if not token.is_punct]
     vector = [token for token in vector if not token.like_num]
     vector = [token for token in vector if not token._.is_emoji]
     vector = [token.text.lower() for token in vector]
-    vector = cls.fse_model.infer([(vector, 0)])
 
     return vector
 
   @classmethod
-  def predict(cls, tweets):
+  def predict(cls, tweets, return_dict=False):
     """
     Classify an array of tweets by sentimens NEGATIVE, NEUTRAL and POSITIVE
     Args:
@@ -105,33 +107,86 @@ class SentimentClasssifier():
     if len(tweets) == 0:
       return []
 
-    tweets = [cls.preprocess(tweet) for tweet in tweets]
-    outputs = cls.model(torch.Tensor(tweets).cpu().float())
-    _, preds = torch.max(outputs, 1)
+    tweets_tokenize = [cls.tokenizer_tweet(tweet) for tweet in tweets]
+    preprocess_for_model = cls.TEXT.pad(tweets_tokenize)
+
+    preprocess_for_model_tensor = cls.TEXT.numericalize(preprocess_for_model, device=cls.device)
+
+    return cls.batch_prediction(preprocess_for_model_tensor, tweets, return_dict)
+
+  @classmethod
+  def predict_sentiment(cls, sentence):
+    tokenized = [tok.strip() for tok in cls.tokenizer_tweet(sentence)]
+    indexed = [cls.TEXT.vocab.stoi[t] for t in tokenized]
+    length = [len(indexed)]
+    tensor = torch.LongTensor(indexed).to(cls.device)
+    tensor = tensor.unsqueeze(1)
+    length_tensor = torch.LongTensor(length)
+    with torch.no_grad():
+        outputs = cls.model(tensor, length_tensor).squeeze(1)
+        _, prediction = torch.max(outputs, 1)
+        
+    return cls.LABEL.vocab.itos[prediction.item()]
+
+  @classmethod
+  def batch_prediction(cls, preprocess_for_model_tensor, input_tweets, return_dict):
+    """
+    Make batch predictions
+    Args:
+        model -- lstm model
+        preprocess_for_model_tensor -- tuple containing the preprocess_tweets and 
+                        the lenghts
+        input_tweets -- plain text tweets
+    """
+    # Sort lengths
+    tweets, tweets_lengths = preprocess_for_model_tensor
+    idx_sort = tweets_lengths.argsort(descending=True)
+
+    # Make the respective sorts reorded the columns
+    tweets_sort = tweets[:, idx_sort]
+    
+    # Make the respective sorts reorded leghts
+    tweets_lengths_sort = tweets_lengths[idx_sort]
+    tweets_reorded = np.array(input_tweets)[idx_sort]
 
     with torch.no_grad():
-      return preds.cpu().numpy() - 1
+        outputs = cls.model(tweets_sort, tweets_lengths_sort)
 
-def get_scores(tweets):
-  if SentimentClasssifier.get_model() is not None and SentimentClasssifier.get_nlp() is not None:
-    scores = SentimentClasssifier.predict(tweets)
-    print(scores, flush=True)
-    positive = 0
-    negative = 0
-    neutral = 0
-    if (len(scores) > 0):
-      positive = np.sum(scores == 1)
-      neutral = np.sum(scores == 0)
-      negative = np.sum(scores == -1)
-    
-    return {
-      'positive': int(positive),
-      'neutral': int(neutral),
-      'negative': int(negative)
-    }
+    _, preds = torch.max(outputs, 1)
+
+    predictions = np.array(cls.LABEL.vocab.itos)[preds]
+
+    if return_dict:
+      return dict((tweet, pred) for tweet, pred in zip(tweets_reorded, predictions))
+
+    return predictions
 
 def get_health():
   model_health = SentimentClasssifier.get_model() is not None
   nlp_health = SentimentClasssifier.get_nlp() is not None
 
+  if model_health and nlp_health:
+    tweets = ["Esto del coronavirus me tiene triste, jejeje xd", "Amo a char con todo mi ❤️", "Estoy triste con pumarejo", 
+        "Hola juan al parecer está funcionando de maravilla", "Este es el de 78% de accuracy"]
+    print(SentimentClasssifier.predict(tweets, True))
+
   return model_health and nlp_health
+
+def get_scores(tweets):
+  if get_health():
+    scores = SentimentClasssifier.predict(tweets)
+    if (len(scores) == 0):
+      return {
+      'positive': 0,
+      'neutral': 0,
+      'negative': 0
+    }
+    
+    return {
+      'positive': int(np.sum(scores == 'POSITIVE')),
+      'neutral': int(np.sum(scores == 'NEUTRAL')),
+      'negative': int(np.sum(scores == 'NEGATIVE'))
+    }
+
+def get_prediction(text):
+  return SentimentClasssifier.predict_sentiment(text)

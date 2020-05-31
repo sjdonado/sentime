@@ -6,6 +6,7 @@ import {
   Flex,
   Text,
   Button,
+  Divider
 } from '@chakra-ui/core';
 
 import { userLogout } from '../services/userService';
@@ -35,20 +36,26 @@ function Appbar({ userData, logout }) {
       <Text fontSize="4xl">Sentime</Text>
       <Flex flex="2" justifyContent="flex-end" alignItems="center">
         {routes.map(({ name, path }) => (
-          <Button
-            key={path}
-            marginLeft="2"
-            variantColor="teal"
-            variant="link"
-            fontWeight={location.pathname.includes(path) ? 'bold' : 'regular'}
-            as={Link}
-            to={path}
-          >
-            {name}
-          </Button>
+          <Flex>
+            <Button
+              key={path}
+              marginLeft="2"
+              variantColor="teal"
+              variant="link"
+              fontWeight={location.pathname.includes(path) ? 'bold' : 'regular'}
+              as={Link}
+              to={path}
+            >
+              {name}
+            </Button>
+            <Divider orientation="vertical" borderColor="teal.900" />
+          </Flex>
         ))}
-        <Text textAlign="center" marginLeft="12" maxWidth="160px" isTruncated>{userData.email}</Text>
-        <Button marginLeft="2" variantColor="pink" variant="link" onClick={handleLogout}>Cerrar sesión</Button>
+        <Flex>
+          <Text textAlign="center" marginLeft="2" maxWidth="160px" isTruncated>{userData.email}</Text>
+          <Divider orientation="vertical" borderColor="teal.900" />
+          <Button marginLeft="2" variantColor="pink" variant="link" onClick={handleLogout}>Cerrar sesión</Button>
+        </Flex>
       </Flex>
     </Flex>
   );

@@ -12,7 +12,7 @@ from threading import Thread
 from datetime import date
 from datetime import timedelta
 
-from flask import session, Blueprint, jsonify
+from flask import session, Blueprint, jsonify, request
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -163,6 +163,16 @@ def search(message):
     socketio.emit('tweets', { 'status': 'finished', 'message': str(e) })
 
 @search_bp.route('/search/status', methods=['GET'])
-def model_status():
+def search_status():
   health = sentiment_classifier.get_health()
   return jsonify({ 'status': health })
+
+@search_bp.route('/search/test', methods=['GET'])
+def search_test():
+  text = request.args.get('text')
+  if len(text) == 0:
+    return jsonify({ 'result': 'Error, text len must be greater than 0' })
+
+  result = sentiment_classifier.get_prediction(text)
+  return jsonify({ 'result': result, 'acc': 0.78 })
+  

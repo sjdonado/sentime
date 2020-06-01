@@ -81,7 +81,7 @@ function Search({ userData }) {
   const handleSearch = (e) => {
     e.preventDefault();
     socket.emit('search', JSON.stringify({ query, hours }));
-    setMessage('Búsqueda enviada, resperando respuesta del servidor...');
+    setMessage('Búsqueda enviada, esperando respuesta del servidor...');
   };
 
   const isProcesing = searchData.status === 'processing';

@@ -73,8 +73,7 @@ def get_geo(city):
 def launch_query(q, query, hours, user_id, search_id):
   while True:
     city = q.get()
-    print("Searching... {}".format(city['formatted_address']))
-
+    logger.info("Searching... {}".format(city['formatted_address']))
     c = twint.Config()
     c.Search = query
     c.Since = (date.today() - timedelta(hours==hours)).strftime('%Y-%m-%d %H:%M:%S')
@@ -99,7 +98,7 @@ def launch_query(q, query, hours, user_id, search_id):
       lat = city['geometry']['location']['lat']
       lng = city['geometry']['location']['lng']
 
-      print("results: {}".format(scores))
+      logger.info("results: {}".format(scores))
       save_results(city_name, lat, lng, scores, search_id)
       socketio.emit('tweets', {
         'id': user_id, 
@@ -116,7 +115,7 @@ def launch_query(q, query, hours, user_id, search_id):
       #   session['task_in_process'] += 1
       #   if session['task_in_process'] == 32:
       #     socketio.emit('tweets', { 'status': 'finished' })
-      print(tweets, scores, flush=True)
+      logger.info(tweets, scores, flush=True)
       q.task_done()
 
     twint.run.Search(c, callback=callback)

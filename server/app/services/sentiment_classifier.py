@@ -165,11 +165,6 @@ def get_health():
   model_health = SentimentClasssifier.get_model() is not None
   nlp_health = SentimentClasssifier.get_nlp() is not None
 
-  if model_health and nlp_health:
-    tweets = ["Esto del coronavirus me tiene triste, jejeje xd", "Amo a char con todo mi ❤️", "Estoy triste con pumarejo", 
-        "Hola juan al parecer está funcionando de maravilla", "Este es el de 78% de accuracy"]
-    print(SentimentClasssifier.predict(tweets, True))
-
   return model_health and nlp_health
 
 def get_scores(tweets):

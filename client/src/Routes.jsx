@@ -29,6 +29,7 @@ function Routes() {
 
   const setUserData = (id, email) => {
     setCookie(USER_DATA_COOKIE, `${id},${email}`, { path: '/', expires: new Date(Date.now() + 8.64e+7) });
+    window.location.href = '/search';
   };
 
   const getUserData = () => {
@@ -51,7 +52,7 @@ function Routes() {
     },
     {
       isPublic: true,
-      path: '/register',
+      path: '/signup/4f3a0ca08e906',
       children: <Register />,
     },
     {

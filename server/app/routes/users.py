@@ -54,9 +54,9 @@ def all_history():
 
   return(jsonify(response))
   
-@users_bp.route('/users/register', methods=['POST'])
+@users_bp.route('/users/signup/4f3a0ca08e906', methods=['POST'])
 @cross_origin(supports_credentials=True)
-def register():
+def signup():
   content = request.json
   user = User.query.filter_by(email=content['email']).first()
   

@@ -24,7 +24,7 @@ import styles from './SearchResults.module.scss';
 const Map = withScriptjs(withGoogleMap(({ results }) => {
   const data = results.map(({ lat, lng, scores }) => ({
     location: new window.google.maps.LatLng(Number(lat), Number(lng)),
-    weight: scores.positive,
+    weight: Math.round((scores.positive / (scores.positive + scores.negative + scores.neutral)) * 100),
   }));
   return (
     <GoogleMap
@@ -148,9 +148,9 @@ function SearchResults({
               labels: ['Positivos', 'Negativos', 'Neutrales'],
               datasets: [{
                 data: [
-                  ((selectedRow.scores.positive / totalSelectedTweets) * 100).toFixed(2),
-                  ((selectedRow.scores.negative / totalSelectedTweets) * 100).toFixed(2),
-                  ((selectedRow.scores.neutral / totalSelectedTweets) * 100).toFixed(2),
+                  ((selectedRow.scores.positive / totalSelectedTweets) * 100).toFixed(1),
+                  ((selectedRow.scores.negative / totalSelectedTweets) * 100).toFixed(1),
+                  ((selectedRow.scores.neutral / totalSelectedTweets) * 100).toFixed(1),
                 ],
                 backgroundColor: [
                   'rgba(255, 99, 132, 0.2)',

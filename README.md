@@ -59,3 +59,9 @@ Go to model folder and follow the next steps:
 
 ## Load model
 Go to `http://localhost:5000/search/status`
+
+## Test predictions
+Go to `http://localhost:5000/search/test?text=Juan%20est%C3%A1%20tirando%20c%C3%B3digo%20con%20cule%20de%20felicidad`
+
+## Signup link
+Go to `http://localhost:5000/users/signup/4f3a0ca08e906`

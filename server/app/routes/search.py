@@ -173,6 +173,7 @@ def search_test():
   if len(text) == 0:
     return jsonify({ 'result': 'Error, text len must be greater than 0' })
 
-  result = sentiment_classifier.get_prediction(text)
-  return jsonify({ 'result': result, 'acc': 0.78 })
+  if sentiment_classifier.get_health():
+    result = sentiment_classifier.get_prediction(text)
+    return jsonify({ 'result': result, 'acc': 0.78 })
   

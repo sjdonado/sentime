@@ -62,7 +62,7 @@ function Landing({ setUserData }) {
           <Box
             as="iframe"
             title="naruto"
-            src="https://www.youtube.com/embed/QhBnZ6NPOY0"
+            src="https://www.youtube.com/embed/aKqyobR9_aA"
             allowFullScreen
             minH="350px"
             marginTop="40px"

@@ -5,7 +5,7 @@ import {
   Text,
 } from '@chakra-ui/core';
 
-function Footer() {
+function Banner() {
   return (
     <Flex
       backgroundColor="#008080"
@@ -13,7 +13,7 @@ function Footer() {
       justifyContent="center"
       alignItems="center"
     >
-      <Text color="white">
+      <Text color="white" fontSize="sm">
         Proyecto final desarrollado por John Fontalvo y Juan Rodríguez.
         Agradecimientos especiales a Emanuel Afanador | Universidad del Norte.
       </Text>
@@ -22,4 +22,4 @@ function Footer() {
 }
 
 
-export default Footer;
+export default Banner;

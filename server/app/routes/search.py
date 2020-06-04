@@ -115,7 +115,7 @@ def launch_query(q, query, hours, user_id, search_id):
       #   session['task_in_process'] += 1
       #   if session['task_in_process'] == 32:
       #     socketio.emit('tweets', { 'status': 'finished' })
-      logger.info(tweets, scores, flush=True)
+      logger.info(tweets, scores)
       q.task_done()
 
     twint.run.Search(c, callback=callback)

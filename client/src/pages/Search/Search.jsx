@@ -50,7 +50,7 @@ function Search({ userData }) {
           total,
           scores,
         } = data;
-        setSearchData({
+        const newSearchData = {
           status,
           results: [
             {
@@ -62,13 +62,11 @@ function Search({ userData }) {
             },
             ...searchData.results,
           ],
-        });
-      }
-      if (status === 'finished') {
-        setSearchData({
-          ...searchData,
-          status,
-        });
+        };
+        if (searchData.results.length === 31) {
+          Object.assign(newSearchData, { status: 'finished' });
+        }
+        setSearchData(newSearchData);
       }
     }
   };

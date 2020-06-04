@@ -22,16 +22,23 @@ import { GOOGLE_MAPS_API_KEY } from '../../environment';
 import styles from './SearchResults.module.scss';
 
 const Map = withScriptjs(withGoogleMap(({ results }) => {
-  const data = results.map(({ lat, lng, scores }) => ({
-    location: new window.google.maps.LatLng(Number(lat), Number(lng)),
-    weight: Math.round((scores.positive / (scores.positive + scores.negative + scores.neutral)) * 100),
-  }));
+  const total = results.reduce((acum, { scores }) => acum + scores.positive + scores.negative + scores.neutral, 0);
+  const data = [];
+  results.forEach(({ lat, lng, scores }) => {
+    const weight = ((scores.positive + scores.negative + scores.neutral) / total) * 100;
+    if (weight > 0) {
+      data.push({
+        location: new window.google.maps.LatLng(Number(lat), Number(lng)),
+        weight,
+      });
+    }
+  });
   return (
     <GoogleMap
       defaultZoom={5}
       defaultCenter={{ lat: 4.1156735, lng: -72.9301367 }}
     >
-      <HeatmapLayer data={data} radius={20} />
+      {total > 0 && <HeatmapLayer data={data} radius={20} />}
     </GoogleMap>
   );
 }));
@@ -44,6 +51,7 @@ function SearchResults({
   data,
   isProcesing,
   status,
+  startedAt,
 }) {
   const [selectedRow, setSelectedRow] = useState();
   const [toggleView, setToggleView] = useState(false);
@@ -104,8 +112,7 @@ function SearchResults({
               textAlign="center"
               fontWeight="bold"
             >
-              Mapa de calor: Clasificación de los tweets encontrados en todos
-              los departamentos de Colombia (rojo/positivos)
+              Mapa de calor: Densidad de resultados por departamento
             </Text>
             <Map
               results={data}
@@ -201,6 +208,7 @@ function SearchResults({
         <Text>{`Estado: ${status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
         <Text>{`Departamentos: ${data.length} de 32`}</Text>
         <Text>{`Total: ${totalTweets} tweets`}</Text>
+        {startedAt !== null ? <Text>{`Tiempo: ${startedAt} segundos`}</Text> : null}
         <Divider />
         <List spacing={3} height="450px" overflow="scroll">
           {data.map(({ city, total, scores }) => (
@@ -238,11 +246,13 @@ SearchResults.propTypes = {
   })).isRequired,
   isProcesing: PropTypes.bool,
   status: PropTypes.string,
+  startedAt: PropTypes.number,
 };
 
 SearchResults.defaultProps = {
   isProcesing: false,
   status: 'finished',
+  startedAt: null,
 };
 
 export default SearchResults;

@@ -8,7 +8,6 @@ flask_script
 flask_migrate
 requests
 redis
-twint
 asyncio
 eventlet
 geopy

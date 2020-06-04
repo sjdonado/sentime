@@ -16,7 +16,7 @@ eventlet.monkey_patch()
 sess = Session()
 db = SQLAlchemy()
 
-logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
+# logging.basicConfig(format="%(asctime)s : %(levelname)s : %(message)s", level=logging.INFO)
 logger = logging.getLogger()
 
 app = Flask(__name__, instance_relative_config=False)
@@ -28,7 +28,6 @@ def create_app():
 
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
   db.init_app(app)
-  #db = SQLAlchemy(app)
   
   sess.init_app(app)
 

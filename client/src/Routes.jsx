@@ -94,11 +94,11 @@ function Routes() {
                   </PublicRoute>
                 ) : (
                   <PrivateRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
+                    <Footer />
                     <Flex width="100vw" height="96.8vh" flexDirection="column" padding="2">
                       <Appbar userData={getUserData()} logout={logout} />
                       {children}
                     </Flex>
-                    <Footer />
                   </PrivateRoute>
                 )}
               </>

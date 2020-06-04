@@ -80,7 +80,7 @@ def launch_query(q, query, hours, user_id, search_id):
     c.Limit = 80
     c.Filter_retweets = True
     c.Store_object = True
-    c.Location = True
+    # c.Location = True
     c.Hide_output = True
     c.Show_hashtags = False
     c.Lang = 'es'
@@ -101,7 +101,7 @@ def launch_query(q, query, hours, user_id, search_id):
       logger.info("results: {}".format(scores))
       save_results(city_name, lat, lng, scores, search_id)
       socketio.emit('tweets', {
-        'id': user_id, 
+        'id': user_id,
         'status': 'processing',
         'data': {
           'city': city_name,
@@ -111,18 +111,10 @@ def launch_query(q, query, hours, user_id, search_id):
           'scores': scores
         }
       })
-      # with app.test_request_context():
-      #   session['task_in_process'] += 1
-      #   if session['task_in_process'] == 32:
-      #     socketio.emit('tweets', { 'status': 'finished' })
-      logger.info(tweets, scores)
+      logger.info(scores)
       q.task_done()
 
     twint.run.Search(c, callback=callback)
-
-# def threaded_func(q, query, hours, user_id, search_id):
-#   el = asyncio.new_event_loop()
-#   el.run_until_complete(launch_query(q, query, hours, user_id, search_id))
 
 @socketio.on('search')
 def search(message):
@@ -130,17 +122,18 @@ def search(message):
   query = data['query']
   hours = data['hours']
 
-  logger.info("Search: {}, hours: {}".format(query, hours))
-
   try:
-    if 'task_in_process' not in session:
-      session['task_in_process'] = 0
+    task_in_process = False
+    last_search = db.session.query(Search).filter_by(user_id=session['user_id']).order_by(Search.created_at.desc()).first()
+    if last_search is not None:
+      results = db.session.query(Result).filter_by(search_id=last_search.id).count()
+      task_in_process = results < 32
 
-    if session['task_in_process'] == 0:
-      session['task_in_process'] = 1
+    logger.info("Search: {}, hours: {}, task_in_process: {}".format(query, hours, task_in_process))
+    if not task_in_process:
       q = Queue(maxsize=0)
 
-      socketio.emit('tweets', { 'status': 'started' })
+      socketio.emit('tweets', { 'id': session['user_id'], 'status': 'started' })
 
       search = Search()
       search.user_id = session['user_id']
@@ -156,10 +149,9 @@ def search(message):
 
       q.join()    
     else:
-      socketio.emit('tweets', { 'status': 'task_in_progress' })
+      socketio.emit('tweets', { 'id': session['user_id'], 'status': 'task_in_process' })
   except Exception as e:
-    session['task_in_process'] = 0
-    socketio.emit('tweets', { 'status': 'finished', 'message': str(e) })
+    socketio.emit('tweets', { 'id': session['user_id'], 'status': 'finished', 'message': str(e) })
 
 @search_bp.route('/search/status', methods=['GET'])
 def search_status():

@@ -11,8 +11,6 @@ import {
   Select,
 } from '@chakra-ui/core';
 
-// import styles from './Search.module.scss';
-
 import { SOCKET_IO_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
 
@@ -30,17 +28,16 @@ function Search({ userData }) {
   const [hours, setHours] = useState(0);
   const [query, setQuery] = useState('');
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
+  const [startedAt, setStartedAt] = useState();
 
   const handleOnTweets = ({ id, status, data }) => {
     if (id === userData.id) {
       if (status === 'started') {
         setMessage('Búsqueda aceptada, obteniendo resultados...');
+        setStartedAt(0);
       }
-      if (status === 'task_in_progress') {
-        setMessage('Tienes una búsqueda en progreso, obteniendo resultados...');
-      }
-      if (status === 'denied') {
-        setMessage('Búsqueda rechazada :(, intenta de nuevo más tarde');
+      if (status === 'task_in_process') {
+        setMessage('Tienes una búsqueda en proceso, intena de nuevo una vez esta haya finalizado.');
       }
       if (status === 'processing') {
         const {
@@ -65,6 +62,7 @@ function Search({ userData }) {
         };
         if (searchData.results.length === 31) {
           Object.assign(newSearchData, { status: 'finished' });
+          setStartedAt(null);
         }
         setSearchData(newSearchData);
       }
@@ -73,7 +71,11 @@ function Search({ userData }) {
 
   useEffect(() => {
     socket.on('tweets', handleOnTweets);
-    return () => socket.off('tweets');
+    const timer = startedAt !== null && setInterval(() => setStartedAt(startedAt + 1), 1000);
+    return () => { 
+      socket.off('tweets');
+      clearInterval(timer);
+    }
   });
 
   const handleSearch = (e) => {
@@ -129,7 +131,7 @@ function Search({ userData }) {
           size="md"
           marginLeft="3"
           disabled={isProcesing || (query && query.length === 0)
-            || hours === 0 || message !== DEFAULT_MESSAGE}
+            || hours === 0 || (message !== DEFAULT_MESSAGE && isProcesing)}
         >
           Buscar
         </Button>
@@ -139,6 +141,7 @@ function Search({ userData }) {
           data={searchData.results}
           isProcesing={isProcesing}
           status={searchData.status}
+          startedAt={startedAt}
         />
       ) : (
         <Text marginTop="12" textAlign="center">{message}</Text>

@@ -23,6 +23,7 @@ const socket = socketIOClient(SOCKET_IO_URL);
 const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 
 function Search({ userData }) {
+  let count = 0;
   const [searchData, setSearchData] = useState({
     status: '',
     results: [],
@@ -43,6 +44,7 @@ function Search({ userData }) {
         setMessage('Búsqueda rechazada :(, intenta de nuevo más tarde');
       }
       if (status === 'processing') {
+        count += 1;
         const {
           city,
           lat,
@@ -50,7 +52,7 @@ function Search({ userData }) {
           total,
           scores,
         } = data;
-        setSearchData({
+        const newSearchData = {
           status,
           results: [
             {
@@ -62,14 +64,18 @@ function Search({ userData }) {
             },
             ...searchData.results,
           ],
-        });
+        };
+        if (searchData.results.length === 31) {
+          Object.assign(newSearchData, { status: 'finished' });
+        }
+        setSearchData(newSearchData);
       }
-      if (status === 'finished') {
-        setSearchData({
-          ...searchData,
-          status,
-        });
-      }
+      // if (status === 'finished') {
+      //   setSearchData({
+      //     ...searchData,
+      //     status,
+      //   });
+      // }
     }
   };
 

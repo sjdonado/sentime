@@ -64,7 +64,7 @@ function SearchResults({
           size="sm"
           onClick={() => setToggleView(!toggleView)}
         >
-          {toggleView ? 'Ver mapa de calor' : 'Ver diagráma de barras'}
+          {toggleView ? 'Ver mapa de calor' : 'Ver diagrama de barras'}
         </Button>
         {toggleView ? (
           <Flex flexDirection="column">

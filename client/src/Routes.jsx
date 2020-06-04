@@ -15,6 +15,7 @@ import { Flex } from '@chakra-ui/core';
 import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
 import Appbar from './components/Appbar';
+import Footer from './components/Footer';
 
 import Search from './pages/Search/Search';
 import Landing from './pages/Landing/Landing';
@@ -89,13 +90,15 @@ function Routes() {
                 {isPublic ? (
                   <PublicRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
                     {children}
+                    <Footer />
                   </PublicRoute>
                 ) : (
                   <PrivateRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
-                    <Flex width="100vw" height="100vh" flexDirection="column" padding="2">
+                    <Flex width="100vw" height="96.8vh" flexDirection="column" padding="2">
                       <Appbar userData={getUserData()} logout={logout} />
                       {children}
                     </Flex>
+                    <Footer />
                   </PrivateRoute>
                 )}
               </>

@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import socketIOClient from 'socket.io-client';
 
 import {
   Flex,
@@ -11,88 +9,22 @@ import {
   Select,
 } from '@chakra-ui/core';
 
-import addCityReducer from '../../reducers/addCity';
-
-import { SOCKET_IO_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
 
 import styles from './Search.module.scss';
 
-const socket = socketIOClient(SOCKET_IO_URL);
-
 const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 
-function Search({ userData }) {
-  const cities = useSelector((state) => state.cities);
-  const dispatch = useDispatch();
-  const [searchData, setSearchData] = useState({
-    status: '',
-    results: [],
-  });
+function Search({
+  searchData,
+  startedAt,
+  message,
+  handleSearch,
+}) {
   const [hours, setHours] = useState(0);
   const [query, setQuery] = useState('');
-  const [message, setMessage] = useState(DEFAULT_MESSAGE);
-  const [startedAt, setStartedAt] = useState();
 
-  const handleOnTweets = ({ id, status, data }) => {
-    if (id === userData.id) {
-      if (status === 'started') {
-        setMessage('Búsqueda aceptada, obteniendo resultados...');
-        setStartedAt(0);
-      }
-      if (status === 'task_in_process') {
-        setMessage('Tienes una búsqueda en proceso, intena de nuevo una vez esta haya finalizado.');
-      }
-      if (status === 'processing') {
-        const {
-          city,
-          lat,
-          lng,
-          total,
-          scores,
-        } = data;
-        const newSearchData = {
-          status,
-          results: [
-            {
-              city,
-              lat,
-              lng,
-              total,
-              scores,
-            },
-            ...searchData.results,
-          ],
-        };
-        // console.log(cities);
-        // console.log(newSearchData.results);
-        const storeData = { type: 'ADD', data };
-        dispatch(storeData);
-        if (searchData.results.length === 31) {
-          Object.assign(newSearchData, { status: 'finished' });
-          setStartedAt(null);
-        }
-        setSearchData(newSearchData);
-      }
-    }
-  };
-
-  useEffect(() => {
-    socket.on('tweets', handleOnTweets);
-    const timer = startedAt !== null && setInterval(() => setStartedAt(startedAt + 1), 1000);
-    return () => {
-      socket.off('tweets');
-      clearInterval(timer);
-    };
-  });
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    socket.emit('search', JSON.stringify({ query, hours }));
-    setMessage('Búsqueda enviada, esperando respuesta del servidor...');
-  };
-
-  const isProcesing = searchData.status === 'processing';
+  const isProcesing = searchData.status === 'processing' && searchData.results.length < 32;
 
   return (
     <>
@@ -106,7 +38,7 @@ function Search({ userData }) {
         ]}
         alignItems="center"
         marginBottom="2"
-        onSubmit={handleSearch}
+        onSubmit={(e) => handleSearch(e, query, hours)}
       >
         <PseudoBox
           as="input"
@@ -144,9 +76,9 @@ function Search({ userData }) {
           Buscar
         </Button>
       </Flex>
-      {((cities.length > 0) || isProcesing) ? (
+      {((searchData.results.length > 0) || isProcesing) ? (
         <SearchResults
-          data={cities}
+          data={searchData.results}
           isProcesing={isProcesing}
           status={searchData.status}
           startedAt={startedAt}
@@ -159,10 +91,13 @@ function Search({ userData }) {
 }
 
 Search.propTypes = {
-  userData: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    email: PropTypes.string.isRequired,
+  searchData: PropTypes.shape({
+    results: PropTypes.arrayOf(PropTypes.any).isRequired,
+    status: PropTypes.string.isRequired,
   }).isRequired,
+  startedAt: PropTypes.number.isRequired,
+  message: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
 };
 
 export default Search;

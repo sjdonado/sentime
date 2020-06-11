@@ -22,6 +22,7 @@ import Landing from './pages/Landing/Landing';
 import Register from './pages/Register/Register';
 import History from './pages/History/History';
 import AllHistory from './pages/AllHistory/AllHistory';
+import SocketIOProvider from './providers/SockerIOProvider';
 
 const USER_DATA_COOKIE = 'session-user';
 
@@ -73,6 +74,12 @@ function Routes() {
     },
   ];
 
+  const provider = (children) => (
+    <SocketIOProvider userData={getUserData()}>
+      {children}
+    </SocketIOProvider>
+  );
+
   return (
     <Router>
       <Switch>
@@ -89,7 +96,7 @@ function Routes() {
               <>
                 {isPublic ? (
                   <PublicRoute isAuth={Boolean(cookies[USER_DATA_COOKIE])}>
-                    {children}
+                    {provider(children)}
                     <Banner />
                   </PublicRoute>
                 ) : (
@@ -97,7 +104,7 @@ function Routes() {
                     <Banner />
                     <Flex width="100vw" height="96.8vh" flexDirection="column" padding="2">
                       <Appbar userData={getUserData()} logout={logout} />
-                      {children}
+                      {provider(children)}
                     </Flex>
                   </PrivateRoute>
                 )}

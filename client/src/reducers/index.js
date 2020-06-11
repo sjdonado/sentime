@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import addCityReducer from './addCity';
+
+import searchDataReducer from './searchData';
 
 const allReducers = combineReducers({
-  cities: addCityReducer,
+  searchData: searchDataReducer,
 });
 
 export default allReducers;

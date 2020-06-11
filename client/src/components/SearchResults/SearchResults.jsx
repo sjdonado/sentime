@@ -22,7 +22,9 @@ import { GOOGLE_MAPS_API_KEY } from '../../environment';
 import styles from './SearchResults.module.scss';
 
 const Map = withScriptjs(withGoogleMap(({ results }) => {
-  const total = results.reduce((acum, { scores }) => acum + scores.positive + scores.negative + scores.neutral, 0);
+  const total = results.reduce(
+    (acum, { scores }) => acum + scores.positive + scores.negative + scores.neutral, 0,
+  );
   const data = [];
   results.forEach(({ lat, lng, scores }) => {
     const weight = ((scores.positive + scores.negative + scores.neutral) / total) * 100;
@@ -50,7 +52,6 @@ const cleanCity = (city) => city.replace(', Colombia', '').replace(' Province', 
 function SearchResults({
   data,
   isProcesing,
-  status,
   startedAt,
 }) {
   const [selectedRow, setSelectedRow] = useState();
@@ -200,12 +201,12 @@ function SearchResults({
       <Flex flex="3" flexDirection="column" padding="6px" minWidth="420px">
         <Progress
           color="teal"
-          isAnimated={isProcesing}
-          hasStripe={isProcesing}
+          isAnimated={Boolean(isProcesing)}
+          hasStripe={Boolean(isProcesing)}
           value={(data.length / 32) * 100}
           marginBottom="3"
         />
-        <Text>{`Estado: ${status === 'processing' ? 'En proceso' : 'Finalizado'}`}</Text>
+        {isProcesing !== null && <Text>{`Estado: ${isProcesing ? 'En proceso' : 'Finalizado'}`}</Text>}
         <Text>{`Departamentos: ${data.length} de 32`}</Text>
         <Text>{`Total: ${totalTweets} tweets`}</Text>
         {startedAt !== null ? <Text>{`Tiempo: ${startedAt} segundos`}</Text> : null}
@@ -245,13 +246,11 @@ SearchResults.propTypes = {
     scores: PropTypes.number,
   })).isRequired,
   isProcesing: PropTypes.bool,
-  status: PropTypes.string,
   startedAt: PropTypes.number,
 };
 
 SearchResults.defaultProps = {
-  isProcesing: false,
-  status: 'finished',
+  isProcesing: null,
   startedAt: null,
 };
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
+import { useSelector, useDispatch } from 'react-redux';
 import socketIOClient from 'socket.io-client';
 
 import {
@@ -10,6 +10,8 @@ import {
   Text,
   Select,
 } from '@chakra-ui/core';
+
+import addCityReducer from '../../reducers/addCity';
 
 import { SOCKET_IO_URL } from '../../environment';
 import SearchResults from '../../components/SearchResults/SearchResults';
@@ -21,6 +23,8 @@ const socket = socketIOClient(SOCKET_IO_URL);
 const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 
 function Search({ userData }) {
+  const cities = useSelector((state) => state.cities);
+  const dispatch = useDispatch();
   const [searchData, setSearchData] = useState({
     status: '',
     results: [],
@@ -60,6 +64,10 @@ function Search({ userData }) {
             ...searchData.results,
           ],
         };
+        // console.log(cities);
+        // console.log(newSearchData.results);
+        const storeData = { type: 'ADD', data };
+        dispatch(storeData);
         if (searchData.results.length === 31) {
           Object.assign(newSearchData, { status: 'finished' });
           setStartedAt(null);
@@ -72,10 +80,10 @@ function Search({ userData }) {
   useEffect(() => {
     socket.on('tweets', handleOnTweets);
     const timer = startedAt !== null && setInterval(() => setStartedAt(startedAt + 1), 1000);
-    return () => { 
+    return () => {
       socket.off('tweets');
       clearInterval(timer);
-    }
+    };
   });
 
   const handleSearch = (e) => {
@@ -136,9 +144,9 @@ function Search({ userData }) {
           Buscar
         </Button>
       </Flex>
-      {((searchData && searchData.results && searchData.results.length > 0) || isProcesing) ? (
+      {((cities.length > 0) || isProcesing) ? (
         <SearchResults
-          data={searchData.results}
+          data={cities}
           isProcesing={isProcesing}
           status={searchData.status}
           startedAt={startedAt}

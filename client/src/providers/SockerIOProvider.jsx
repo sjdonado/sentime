@@ -20,14 +20,12 @@ const DEFAULT_MESSAGE = 'Haz click en Buscar para empezar tu búsqueda';
 function SocketIOProvider({ userData, children }) {
   const dispatch = useDispatch();
   const searchData = useSelector((state) => state.searchData);
-  const [startedAt, setStartedAt] = useState();
   const [message, setMessage] = useState(DEFAULT_MESSAGE);
 
   const handleOnTweets = ({ id, status, data }) => {
     if (id === userData.id) {
       if (status === 'started') {
         setMessage('Búsqueda aceptada, obteniendo resultados...');
-        setStartedAt(0);
         dispatch({ type: 'REMOVE_ALL' });
       }
       if (status === 'task_in_process') {
@@ -55,7 +53,7 @@ function SocketIOProvider({ userData, children }) {
         // console.log(newSearchData.results);
         if (searchData.results.length === 31) {
           Object.assign(newSearchData, { status: 'finished' });
-          setStartedAt(null);
+          dispatch({ type: 'INCREMENT_TIME', startedAt: null });
         }
         dispatch({ type: 'ADD', data: newSearchData });
       }
@@ -64,12 +62,14 @@ function SocketIOProvider({ userData, children }) {
 
   useEffect(() => {
     socket.on('tweets', handleOnTweets);
-    const timer = startedAt !== null && setInterval(() => setStartedAt((startedAt || 0) + 1), 1000);
+    const timer = searchData.startedAt !== null && setInterval(() => {
+      dispatch({ type: 'INCREMENT_TIME', startedAt: (searchData.startedAt || 0) + 1 });
+    }, 1000);
     return () => {
       socket.off('tweets');
       clearInterval(timer);
     };
-  }, [startedAt, setStartedAt]);
+  }, [searchData, dispatch]);
 
   const handleSearch = (e, query, hours) => {
     e.preventDefault();
@@ -81,7 +81,7 @@ function SocketIOProvider({ userData, children }) {
     if (isValidElement(child)) {
       return cloneElement(child, {
         searchData,
-        startedAt,
+        startedAt: searchData.startedAt,
         message,
         handleSearch,
       });
